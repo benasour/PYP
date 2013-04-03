@@ -1,0 +1,8 @@
+{
+  "name": "PYP",
+  "version": "0.0.1",
+  "dependencies": {
+    "express": "3.0.0",
+    "socket.io": "0.9.0"
+  }
+}
