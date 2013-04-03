@@ -1,0 +1,42 @@
+<HTML> 
+	<HEAD>
+		<SCRIPT type="text/javascript">
+		<!--All script in this tag is run when the page loads-->
+		//alert("Welcome to the batcave!");
+		
+		//store global variable
+		var namesArray= new Array;
+		
+		//define object 
+		
+		function (gameObject)
+		{
+			//Writes game object to page
+		}
+		
+		function addName ()
+		{
+			var name = document.getElementById('nameInputBox');
+			addNametoDiv(name.value);
+		}
+		
+		function addNametoDiv(inputName)
+		{
+			var namesList = document.getElementById('namesList');
+			namesList.innerHTML += "<li>" + inputName + "</li>";	
+			
+		}
+		
+		</SCRIPT>
+	</HEAD>
+	<BODY>
+		Enter your Name: <input type="text" id='nameInputBox' />
+		<br />
+			<input type="button" value ="Add Name" onclick="addName()"/>
+		<br/>
+		Players:
+		<br />
+			<ul id="namesList"> 
+		</ul>
+	</BODY>
+</HTML>
