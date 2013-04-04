@@ -1,0 +1,87 @@
+<HTML> 
+	<HEAD>
+		<SCRIPT type="text/javascript">
+		<!--All script in this tag is run when the page loads-->
+		//alert("Welcome to the batcave!");
+		
+		//store global variable
+		var namesArray;
+		
+		//define object 
+		
+		function init()
+		{
+			document.getElementById('init').hidden=false;
+			document.getElementById('game').hidden=true;
+			document.getElementById('results').hidden=true;
+			namesArray = new Array;
+			namesList.innerHTML = "";
+		}
+		
+		function receiveData(gameObject)
+		{
+			//Writes game object to page
+		}
+		
+		function addName ()
+		{
+			if (namesArray.length>=6)
+			{
+				alert("Sorry, this game has a max of 6 players.");
+				exit;
+			}
+			var name = document.getElementById('nameInputBox');
+			namesArray.push(name.value);
+			addNametoDiv(name.value);
+		}
+		
+		function addNametoDiv(inputName)
+		{
+			var namesList = document.getElementById('namesList');
+			namesList.innerHTML += "<li>" + inputName + "</li>";	
+			
+		}
+		
+		function startGame()
+		{
+			document.getElementById('init').hidden=true;
+			document.getElementById('game').hidden=false;
+		}
+		
+		function showResults()
+		{
+			document.getElementById('game').hidden=true;
+			document.getElementById('results').hidden=false;
+		}
+		
+		</SCRIPT>
+	</HEAD>
+	<BODY>
+		<div id="init">
+			Enter your Name: <input type="text" id='nameInputBox' onkeydown="if (event.keyCode == 13) addName()" />
+			<br />
+				<input type="button" value ="Add Name" onclick="addName()"/>
+			<br/>
+			Players:
+			<br />
+			<ol id="namesList"> 
+			</ol>
+			<br />
+			<input type="button" value="Start Game" onclick="startGame()"/>
+		</ul>
+		</div>
+		<div id="game">
+			start game
+			<br />
+			<input type="button" value="End Game" onclick="showResults()"/>
+		</div>
+		<div id="results">
+			show results
+			<br />
+			<input type="button" value="New Game" onclick="init()"/>
+		</div>
+		
+		<!-- quick script call to init -->
+		<script type="text/javascript">init();</script>
+	</BODY>
+</HTML>
