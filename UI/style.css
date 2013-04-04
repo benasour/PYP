@@ -1,0 +1,15 @@
+.hasPlayer {
+	color: red;
+}
+
+ol li { 
+	background: #efefef; 
+}
+ol li:nth-child(odd) { 
+	background: #fff; 
+}
+
+#winner {
+	color: red;
+	font-size: 18;
+}
