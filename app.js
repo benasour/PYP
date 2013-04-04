@@ -34,7 +34,14 @@ io.sockets.on('connection', function (socket) {
   socket.on('startGame', function (name) {
     console.log('I am the Start Game function!');
 	//this is where we loop
+	var data = {};
+	for (var i = 0; i<Object.keys(players2).length; i++)
+		data[Object.keys(players2)[i]] = players2[Object.keys(players2)[i]];
+	var rnd = Math.floor(Math.random()*Object.keys(players2).length);
+	data[Object.keys(data)[rnd]]++;
 	
+	socket.emit('boardUpdate', data);
+	socket.broadcast.emit('boardUpdate', data);
 	
   });
   
