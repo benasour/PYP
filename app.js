@@ -5,7 +5,7 @@ var app = require('http').createServer(handler)
 app.listen(8080);
 
 function handler (req, res) {
-  fs.readFile(__dirname + '/index.html',
+  fs.readFile(__dirname + '/UI/index.html',
   function (err, data) {
     if (err) {
       res.writeHead(500);
@@ -18,8 +18,10 @@ function handler (req, res) {
 }
 
 io.sockets.on('connection', function (socket) {
-  socket.emit('news', { hello: 'world' });
-  socket.on('giveMeData', function (data) {
-    console.log('heres your data');
-  });
+  console.log('A new connection has been created');
+  
+  //socket.emit('news', { hello: 'world' });
+  //socket.on('giveMeData', function (data) {
+  //  console.log('heres your data');
+  //});
 });

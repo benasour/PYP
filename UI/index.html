@@ -1,6 +1,11 @@
 <HTML> 
 	<HEAD>
+		<script src="/socket.io/socket.io.js"></script>
 		<SCRIPT type="text/javascript">
+		 var socket = io.connect('http://localhost:8080');
+		 socket.on('connect', function (data) {
+			//alert('client is connected');
+		  });
 		<!--All script in this tag is run when the page loads-->
 		//alert("Welcome to the batcave!");
 		
