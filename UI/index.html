@@ -21,8 +21,15 @@
 		function receiveData(gameObject)
 		{
 			//Writes game object to page
-			
 			renderBoard();
+		}
+		function fakeData()
+		{
+			var data = namesArray;
+			var rnd = Math.floor(Math.random()*Object.keys(namesArray).length);
+			data[Object.keys(namesArray)[rnd]]++;
+			
+			receiveData(JSON.stringify(data));
 		}
 		
 		function renderBoard()
@@ -34,9 +41,12 @@
 			//for now hardcode it to be 8 rows and n columns
 				// Object.keys(namesArray).length is n
 			//horse position determined by 8-m where m is value associated with player
+			for (var i = 0; i < 8; i++)
+				grid.innerHTML += "<col width= '40px'>"
 			grid.innerHTML += "<tbody id='tableBody'></tbody>";
 			var gridTest = document.getElementById("tableBody");
 			var html = ""
+			
 			for (var i = 0; i < 8; i++)
 			{
 				gridTest.innerHTML += "<tr>";
@@ -81,12 +91,17 @@
 		
 		function startGame()
 		{
+			if (Object.keys(namesArray).length <=1)
+			{
+				alert("Need at least two players to play!");
+				exit;
+			}
 			document.getElementById('init').hidden=true;
 			document.getElementById('game').hidden=false;
 			renderBoard();
 			
 			//send list of all player objects to server
-			alert(JSON.stringify(namesArray));
+			//alert(JSON.stringify(namesArray));
 			
 			//temp put this here to move things along
 			//receiveData();
@@ -120,6 +135,7 @@
 			</table>
 			<br />
 			<input type="button" value="End Game" onclick="showResults()"/>
+			<input type="button" value="increment" onclick="fakeData()"/>
 		</div>
 		<div id="results">
 			show results
