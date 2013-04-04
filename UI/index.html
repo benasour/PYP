@@ -64,7 +64,7 @@
 			var gridTest = document.getElementById("tableBody");
 			var html = "";
 			
-			html += "<tr><td colspan='" + Object.keys(namesArray).length + "'>";
+			html += "<tr><td class='border' colspan='" + Object.keys(namesArray).length + "'>";
 			for( var k = 0; k < Object.keys(namesArray).length ; k++)
 				html += "------";
 			html += "</td></tr>";
@@ -78,8 +78,8 @@
 				{
 					if (namesArray[Object.keys(namesArray)[j]] == 7-i)
 					{
-						html += "<td class='hasPlayer'>";
-						html +=  "|  " + (j+1) + "|" ;
+						html += "<td>";
+						html +=  "|  <a class='hasPlayer'>" + (j+1) + "</a>|" ;
 					}
 					else
 					{
@@ -91,7 +91,7 @@
 				gridTest.innerHTML += html + "</tr>";
 			}
 			html = "";
-			html += "<tr><td colspan='" + Object.keys(namesArray).length + "'>";
+			html += "<tr><td class='border' colspan='" + Object.keys(namesArray).length + "'>";
 			for( var k = 0; k < Object.keys(namesArray).length ; k++)
 				html += "------";
 			html += "</td></tr>";
@@ -162,28 +162,22 @@
 		<div id="init">
 			Enter your Name: <input type="text" id='nameInputBox' onkeydown="if (event.keyCode == 13) addName()" />
 			<br />
-				<input type="button" value ="Add Name" onclick="addName()"/>
-			<br/>
-			Players:
-			<br />
-			<ol id="namesList"> 
-			</ol>
-			<br />
-			<input type="button" value="Start Game" onclick="startGame()"/>
+			<input type="button"class="add" value ="Add Name" onclick="addName()"/>
+			<input type="button" class="button" value="Start Game" onclick="startGame()"/>
 		</div>
 		<div id="game">
-			<br />
 			<table id="gameBoard" border="0">
 			</table>
-			<br />
-			<input type="button" value="increment" onclick="fakeData()"/>
+			<input type="button" class="button" value="increment" onclick="fakeData()"/>
 		</div>
 		<div id="results">
-			<br />
 			<p id="winner"></p>
-			<input type="button" value="New Game" onclick="init()"/>
+			<input type="button" class="end" value="New Game" onclick="init()"/>
+			<br /> <br />
 		</div>
-		
+		<div id="players">Players:
+			<ol id="namesList"></ol>
+		</div>
 		<!-- quick script call to init -->
 		<script type="text/javascript">init();</script>
 	</BODY>

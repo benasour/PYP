@@ -13,5 +13,28 @@ table {
 table td, table th
 {
 	text-align:center;
-    padding: 0; /* 'cellpadding' equivalent */
+	padding: 0; /* 'cellpadding' equivalent */
 }
+
+
+.button:hover{
+ 	background: #44DD55;
+}
+.button:active{
+	background: #10B630;
+}
+
+.add:hover{
+ 	background: #77BBFF;
+}
+.add:active{
+	background: #6195FF;
+}
+
+.end:hover{
+ 	background: #FF4F4F;
+}
+.end:active{
+	background: #EE3333;
+}
+
