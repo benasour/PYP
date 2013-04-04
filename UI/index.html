@@ -14,24 +14,40 @@
 			document.getElementById('init').hidden=false;
 			document.getElementById('game').hidden=true;
 			document.getElementById('results').hidden=true;
-			namesArray = new Array;
+			namesArray = {};
 			namesList.innerHTML = "";
 		}
 		
 		function receiveData(gameObject)
 		{
 			//Writes game object to page
+			
+			renderBoard();
+		}
+		
+		function renderBoard()
+		{
+			var grid = document.getElementById('gameBoard');
+			grid.innerHTML = "";
+			
+			//now construct our table
 		}
 		
 		function addName ()
 		{
-			if (namesArray.length>=6)
+		
+			var name = document.getElementById('nameInputBox');
+			if (Object.keys(namesArray).length>=6)
 			{
 				alert("Sorry, this game has a max of 6 players.");
 				exit;
 			}
-			var name = document.getElementById('nameInputBox');
-			namesArray.push(name.value);
+			if (namesArray[name.value] == 0)
+			{
+				alert("Sorry, no duplicate names allowed");
+				exit;
+			}
+			namesArray[name.value]=0;
 			addNametoDiv(name.value);
 		}
 		
@@ -46,6 +62,13 @@
 		{
 			document.getElementById('init').hidden=true;
 			document.getElementById('game').hidden=false;
+			renderBoard();
+			
+			//send list of all player objects to server
+			JSON.stringify(namesArray);
+			
+			//temp put this here to move things along
+			//receiveData();
 		}
 		
 		function showResults()
@@ -72,6 +95,8 @@
 		</div>
 		<div id="game">
 			start game
+			<table id="gameBoard" border="0">
+			</table>
 			<br />
 			<input type="button" value="End Game" onclick="showResults()"/>
 		</div>
