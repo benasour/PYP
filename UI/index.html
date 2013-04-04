@@ -31,6 +31,27 @@
 			grid.innerHTML = "";
 			
 			//now construct our table
+			//for now hardcode it to be 8 rows and n columns
+				// Object.keys(namesArray).length is n
+			//horse position determined by 8-m where m is value associated with player
+			grid.innerHTML += "<tbody id='tableBody'></tbody>";
+			var gridTest = document.getElementById("tableBody");
+			var html = ""
+			for (var i = 0; i < 8; i++)
+			{
+				gridTest.innerHTML += "<tr>";
+				html = "";
+				for (var j = 0; j < Object.keys(namesArray).length; j++)
+				{
+					html += "<td>";
+					if (namesArray[Object.keys(namesArray)[j]] == 7-i)
+						html += j+1;
+					else
+						html += ".";
+					html += "</td>";
+				}
+				gridTest.innerHTML += html + "</tr>";
+			}
 		}
 		
 		function addName ()
@@ -65,7 +86,7 @@
 			renderBoard();
 			
 			//send list of all player objects to server
-			JSON.stringify(namesArray);
+			alert(JSON.stringify(namesArray));
 			
 			//temp put this here to move things along
 			//receiveData();
