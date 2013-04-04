@@ -6,6 +6,7 @@
 		
 		//store global variable
 		var namesArray;
+		var trackLength = 8;
 		
 		//define object 
 		
@@ -20,15 +21,27 @@
 		
 		function receiveData(gameObject)
 		{
+			gameObject = JSON.parse(gameObject);
 			//Writes game object to page
+			var winner = -1;
+			for (var i = 0; i<Object.keys(namesArray).length; i++)
+			{
+				namesArray[Object.keys(namesArray)[i]] = gameObject[Object.keys(namesArray)[i]];
+				if (namesArray[Object.keys(namesArray)[i]] == trackLength-1)
+					winner=i;
+			}
+			drawNames();
 			renderBoard();
+			if (winner != -1)
+				showResults(winner);
 		}
 		function fakeData()
 		{
-			var data = namesArray;
+			var data = {};
+			for (var i = 0; i<Object.keys(namesArray).length; i++)
+				data[Object.keys(namesArray)[i]] = namesArray[Object.keys(namesArray)[i]];
 			var rnd = Math.floor(Math.random()*Object.keys(namesArray).length);
-			data[Object.keys(namesArray)[rnd]]++;
-			
+			data[Object.keys(data)[rnd]]++;
 			receiveData(JSON.stringify(data));
 		}
 		
@@ -62,6 +75,7 @@
 				}
 				gridTest.innerHTML += html + "</tr>";
 			}
+			return;
 		}
 		
 		function addName ()
@@ -71,21 +85,28 @@
 			if (Object.keys(namesArray).length>=6)
 			{
 				alert("Sorry, this game has a max of 6 players.");
-				exit;
 			}
-			if (namesArray[name.value] == 0)
+			else if (namesArray[name.value] == 0)
 			{
 				alert("Sorry, no duplicate names allowed");
-				exit;
 			}
-			namesArray[name.value]=0;
-			addNametoDiv(name.value);
+			else
+			{
+				namesArray[name.value]=0;
+				name.value = "";
+				drawNames();
+			}
+			
+			//TODO: SEND LIST OF NAMES TO SERVER
+			//JSON.stringify(namesArray);
 		}
 		
-		function addNametoDiv(inputName)
+		function drawNames()
 		{
 			var namesList = document.getElementById('namesList');
-			namesList.innerHTML += "<li>" + inputName + "</li>";	
+			namesList.innerHTML = "";
+			for (var i = 0; i<Object.keys(namesArray).length; i++)
+				namesList.innerHTML += "<li>" + Object.keys(namesArray)[i] + "</li>";	
 			
 		}
 		
@@ -102,15 +123,13 @@
 			
 			//send list of all player objects to server
 			//alert(JSON.stringify(namesArray));
-			
-			//temp put this here to move things along
-			//receiveData();
 		}
 		
-		function showResults()
+		function showResults(winnerVal)
 		{
 			document.getElementById('game').hidden=true;
 			document.getElementById('results').hidden=false;
+			document.getElementById('winner').innerHTML += "Winner was: " + Object.keys(namesArray)[winnerVal];
 		}
 		
 		</SCRIPT>
@@ -134,12 +153,12 @@
 			<table id="gameBoard" border="0">
 			</table>
 			<br />
-			<input type="button" value="End Game" onclick="showResults()"/>
 			<input type="button" value="increment" onclick="fakeData()"/>
 		</div>
 		<div id="results">
 			show results
 			<br />
+			<p id="winner"></p>
 			<input type="button" value="New Game" onclick="init()"/>
 		</div>
 		
