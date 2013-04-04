@@ -2,6 +2,7 @@ var app = require('http').createServer(handler)
   , io = require('socket.io').listen(app)
   , fs = require('fs')
 
+//changed this to 8080 because 80 was throwing a conflict error
 app.listen(8080);
 
 function handler (req, res) {
