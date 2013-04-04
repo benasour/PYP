@@ -6,6 +6,11 @@
 		 socket.on('connect', function (data) {
 			//alert('client is connected');
 		  });
+		  
+		  socket.on('playerListUpdate', function (data) {
+			//alert('playerListUpdate');
+			drawNames(data);
+		  });
 		<!--All script in this tag is run when the page loads-->
 		//alert("Welcome to the batcave!");
 		
@@ -26,7 +31,7 @@
 		
 		function receiveData(gameObject)
 		{
-			gameObject = JSON.parse(gameObject);
+			//gameObject = JSON.parse(gameObject);
 			//Writes game object to page
 			var winner = -1;
 			for (var i = 0; i<Object.keys(namesArray).length; i++)
@@ -113,6 +118,10 @@
 		{
 		
 			var name = document.getElementById('nameInputBox');
+			//TODO: SEND LIST OF NAMES TO SERVER
+			//JSON.stringify(namesArray);
+			socket.emit('join',name.value);
+			
 			if (Object.keys(namesArray).length>=6)
 			{
 				alert("Sorry, this game has a max of 6 players.");
@@ -128,12 +137,15 @@
 				drawNames();
 			}
 			
-			//TODO: SEND LIST OF NAMES TO SERVER
-			//JSON.stringify(namesArray);
+			
 		}
 		
-		function drawNames()
+		function drawNames(inputNamesArray)
 		{
+			if (inputNamesArray)
+			{
+				namesArray = inputNamesArray;
+			}
 			var namesList = document.getElementById('namesList');
 			namesList.innerHTML = "";
 			for (var i = 0; i<Object.keys(namesArray).length; i++)
@@ -150,7 +162,10 @@
 			}
 			document.getElementById('init').hidden=true;
 			document.getElementById('game').hidden=false;
-			renderBoard();
+			
+			socket.emit('startGame',name.value);
+			
+			//renderBoard();
 			
 			//send list of all player objects to server
 			//alert(JSON.stringify(namesArray));
