@@ -2,8 +2,15 @@ var app = require('http').createServer(handler)
   , io = require('socket.io').listen(app)
   , fs = require('fs')
 
-//changed this to 8080 because 80 was throwing a conflict error
-app.listen(8080);
+ //heroku suggestion to use port 5000
+ var port = process.env.PORT || 5000;
+ app.listen(port);
+
+// assuming io is the Socket.IO server object
+io.configure(function () { 
+  io.set("transports", ["xhr-polling"]); 
+  io.set("polling duration", 10); 
+});
 
 function handler (req, res) {
   fs.readFile(__dirname + '/UI/index.html',
