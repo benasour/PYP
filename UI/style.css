@@ -1,15 +1,17 @@
 .hasPlayer {
 	color: red;
 }
-
-ol li { 
-	background: #efefef; 
-}
-ol li:nth-child(odd) { 
-	background: #fff; 
-}
-
-#winner {
+#winningPlayer {
 	color: red;
-	font-size: 18;
+	font-size: 1.5em;
+}
+table {
+	font-size: 1.25em;
+    	border-collapse: collapse; /* 'cellspacing' equivalent */
+	color: green;
+}
+table td, table th
+{
+	text-align:center;
+    padding: 0; /* 'cellpadding' equivalent */
 }

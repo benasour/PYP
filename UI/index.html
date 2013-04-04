@@ -1,5 +1,6 @@
 <HTML> 
 	<HEAD>
+		<link rel="stylesheet" type="text/css" href="style.css">
 		<SCRIPT type="text/javascript">
 		<!--All script in this tag is run when the page loads-->
 		//alert("Welcome to the batcave!");
@@ -75,16 +76,21 @@
 				html = "";
 				for (var j = 0; j < Object.keys(namesArray).length; j++)
 				{
-					html += "<td>";
 					if (namesArray[Object.keys(namesArray)[j]] == 7-i)
+					{
+						html += "<td class='hasPlayer'>";
 						html +=  "|  " + (j+1) + "|" ;
+					}
 					else
+					{
+						html += "<td>";
 						html += "| . |";
+					}
 					html += "</td>";
 				}
 				gridTest.innerHTML += html + "</tr>";
 			}
-			
+			html = "";
 			html += "<tr><td colspan='" + Object.keys(namesArray).length + "'>";
 			for( var k = 0; k < Object.keys(namesArray).length ; k++)
 				html += "------";
@@ -93,15 +99,6 @@
 				
 	          
 			return;
-		}
-		
-		function showBorder()
-		{
-		var bar = document.getElementById('gameborder');
-		
-			
-		
-		
 		}
 		
 		function addName ()
@@ -156,7 +153,7 @@
 		{
 			document.getElementById('game').hidden=true;
 			document.getElementById('results').hidden=false;
-			document.getElementById('winner').innerHTML = "Winner was: " + Object.keys(namesArray)[winnerVal];
+			document.getElementById('winner').innerHTML = "Winner was: <a id='winningPlayer'>" + Object.keys(namesArray)[winnerVal] + "</a>";
 		}
 		
 		</SCRIPT>
@@ -173,10 +170,8 @@
 			</ol>
 			<br />
 			<input type="button" value="Start Game" onclick="startGame()"/>
-		</ul>
 		</div>
 		<div id="game">
-			start game
 			<br />
 			<table id="gameBoard" border="0">
 			</table>
@@ -184,7 +179,6 @@
 			<input type="button" value="increment" onclick="fakeData()"/>
 		</div>
 		<div id="results">
-			show results
 			<br />
 			<p id="winner"></p>
 			<input type="button" value="New Game" onclick="init()"/>
