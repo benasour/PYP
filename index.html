@@ -2,15 +2,23 @@
   <head>
     <script src="/socket.io/socket.io.js"></script>
 	<script>
-	  var socket = io.connect('http://localhost:5000');
-	  socket.on('news', function (data) {
-		alert("Event handler from socket:" + data);
-		console.log(data);
-		socket.emit('giveMeData', { my: 'data' });
-	  });
+		
+		//PRD
+		var socketConnectionURL = "http://blooming-thicket-9622.herokuapp.com";
+		if (window.location.toString().indexOf("localhost")>=0)
+		{
+			//localhost
+			socketConnectionURL ="http://localhost:5000";
+		}
+		var socket = io.connect(socketConnectionURL);
+			socket.on('news', function (data) {
+			alert("Event handler from socket:" + data);
+			console.log(data);
+			socket.emit('giveMeData', { my: 'data' });
+		});
 	</script>
   </head>
   <body>
-    <h1>Test</h1>
+    <h1>This is the Test version of the PYP Application</h1>
   </body>
 </html>
