@@ -47,6 +47,7 @@
 		
 		function renderBoard()
 		{
+		   
 			var grid = document.getElementById('gameBoard');
 			grid.innerHTML = "";
 			
@@ -54,12 +55,20 @@
 			//for now hardcode it to be 8 rows and n columns
 				// Object.keys(namesArray).length is n
 			//horse position determined by 8-m where m is value associated with player
+			          	 
+		   			   
 			for (var i = 0; i < 8; i++)
-				grid.innerHTML += "<col width= '40px'>"
+				grid.innerHTML += "<col width= '30px'>";
 			grid.innerHTML += "<tbody id='tableBody'></tbody>";
 			var gridTest = document.getElementById("tableBody");
-			var html = ""
+			var html = "";
 			
+			html += "<tr><td colspan='" + Object.keys(namesArray).length + "'>";
+			for( var k = 0; k < Object.keys(namesArray).length ; k++)
+				html += "------";
+			html += "</td></tr>";
+			
+			gridTest.innerHTML += html;  
 			for (var i = 0; i < 8; i++)
 			{
 				gridTest.innerHTML += "<tr>";
@@ -68,14 +77,31 @@
 				{
 					html += "<td>";
 					if (namesArray[Object.keys(namesArray)[j]] == 7-i)
-						html += j+1;
+						html +=  "|  " + (j+1) + "|" ;
 					else
-						html += ".";
+						html += "| . |";
 					html += "</td>";
 				}
 				gridTest.innerHTML += html + "</tr>";
 			}
+			
+			html += "<tr><td colspan='" + Object.keys(namesArray).length + "'>";
+			for( var k = 0; k < Object.keys(namesArray).length ; k++)
+				html += "------";
+			html += "</td></tr>";
+			gridTest.innerHTML += html; 
+				
+	          
 			return;
+		}
+		
+		function showBorder()
+		{
+		var bar = document.getElementById('gameborder');
+		
+			
+		
+		
 		}
 		
 		function addName ()
@@ -123,6 +149,7 @@
 			
 			//send list of all player objects to server
 			//alert(JSON.stringify(namesArray));
+			
 		}
 		
 		function showResults(winnerVal)
@@ -150,6 +177,7 @@
 		</div>
 		<div id="game">
 			start game
+			<br />
 			<table id="gameBoard" border="0">
 			</table>
 			<br />
