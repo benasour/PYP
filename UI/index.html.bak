@@ -1,6 +1,10 @@
 <HTML> 
 	<HEAD>
+<<<<<<< HEAD
+		<script src="/socket.io/socket.io.js"></script>
+=======
 		<link rel="stylesheet" type="text/css" href="style.css">
+>>>>>>> c5c11cd752d8b31edf8754ac12153a0e6b53103b
 		<SCRIPT type="text/javascript">
 		 var socket = io.connect('http://localhost:8080');
 		 socket.on('connect', function (data) {

@@ -1,15 +1,40 @@
 .hasPlayer {
 	color: red;
 }
-
-ol li { 
-	background: #efefef; 
-}
-ol li:nth-child(odd) { 
-	background: #fff; 
-}
-
-#winner {
+#winningPlayer {
 	color: red;
-	font-size: 18;
+	font-size: 1.5em;
 }
+table {
+	font-size: 1.25em;
+    	border-collapse: collapse; /* 'cellspacing' equivalent */
+	color: green;
+}
+table td, table th
+{
+	text-align:center;
+	padding: 0; /* 'cellpadding' equivalent */
+}
+
+
+.button:hover{
+ 	background: #44DD55;
+}
+.button:active{
+	background: #10B630;
+}
+
+.add:hover{
+ 	background: #77BBFF;
+}
+.add:active{
+	background: #6195FF;
+}
+
+.end:hover{
+ 	background: #FF4F4F;
+}
+.end:active{
+	background: #EE3333;
+}
+
