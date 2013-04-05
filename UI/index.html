@@ -1,6 +1,6 @@
 <HTML> 
 	<HEAD>
-		<link rel="stylesheet" type="text/css" href="style.css">
+		<link rel="stylesheet" type="text/css" href="/UI/style.css">
 		<script src="/socket.io/socket.io.js"></script>
 		<SCRIPT type="text/javascript">
 		 
@@ -35,6 +35,7 @@
 		var namesArray;
 		var trackLength = 8;
 		var writeCounter = 0;
+		var started=false;
 		
 		//javascript helper functions
 		function writeDebug(data)
@@ -58,12 +59,18 @@
 		{
 			//gameObject = JSON.parse(gameObject);
 			//Writes game object to page
+			
 			var winner = -1;
 			for (var i = 0; i<Object.keys(namesArray).length; i++)
 			{
 				namesArray[Object.keys(namesArray)[i]] = gameObject[Object.keys(namesArray)[i]];
 				if (namesArray[Object.keys(namesArray)[i]] == trackLength-1)
 					winner=i;
+				if (!started && namesArray[Object.keys(namesArray)[i]] != 0)
+				{
+					started = true;
+					startGame();
+				}
 			}
 			drawNames();
 			renderBoard();
@@ -197,6 +204,7 @@
 			renderBoard();
 			//send list of all player objects to server
 			//alert(JSON.stringify(namesArray));
+			return;
 			
 		}
 		
