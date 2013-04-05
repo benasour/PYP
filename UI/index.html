@@ -22,14 +22,16 @@
 			
 		  });
 		  
+		  
 		  socket.on('partialBoardUpdate', function (data) {
-			writeDebug(data);
+			//writeCounter++;
+			//myVar=setTimeout(writeDebug(data),writeCounter*250);
 		  });
 		
 		//store global variable
 		var namesArray;
 		var trackLength = 8;
-		
+		var writeCounter = 0;
 		
 		//javascript helper functions
 		function writeDebug(data)
