@@ -3,6 +3,8 @@
 		<link rel="stylesheet" type="text/css" href="style.css">
 		<script src="/socket.io/socket.io.js"></script>
 		<SCRIPT type="text/javascript">
+		 
+		 //socket functions for communication and event handling from the server
 		 var socket = io.connect('http://localhost:8080');
 		 socket.on('connect', function (data) {
 			//alert('client is connected');
@@ -12,20 +14,26 @@
 			//alert('playerListUpdate');
 			drawNames(data);
 		  });
-		  socket.on('boardUpdate', function (data) {
-			alert('boardUpdate');
-			//renderBoard(data);
+		  
+		  socket.on('finalBoardUpdate', function (data) {
+			debugDiv.innerHTML = JSON.stringify(data);
+			//renderBoard(data); // this isnt working, not sure why it doesnt draw the board correctly
+			//receiveData(JSON.stringify(data)); // nope doesnt work either
+			
 		  });
 		  
-		<!--All script in this tag is run when the page loads-->
-		//alert("Welcome to the batcave!");
+		  socket.on('partialBoardUpdate', function (data) {
+			var debugDiv = document.getElementById('debugDiv');
+			debugDiv.innerHTML += JSON.stringify(data) + '<br/>';
+		  });
 		
 		//store global variable
 		var namesArray;
 		var trackLength = 8;
 		
-		//define object 
 		
+		//javascript helper functions
+		//init function sets up the inital layout of the page
 		function init()
 		{
 			document.getElementById('init').hidden=false;
@@ -37,7 +45,7 @@
 		
 		function receiveData(gameObject)
 		{
-			//gameObject = JSON.parse(gameObject);
+			gameObject = JSON.parse(gameObject);
 			//Writes game object to page
 			var winner = -1;
 			for (var i = 0; i<Object.keys(namesArray).length; i++)
@@ -187,6 +195,7 @@
 		</SCRIPT>
 	</HEAD>
 	<BODY>
+		
 		<div id="init">
 			Enter your Name: <input type="text" id='nameInputBox' onkeydown="if (event.keyCode == 13) addName()" />
 			<br />
@@ -206,6 +215,7 @@
 		<div id="players">Players:
 			<ol id="namesList"></ol>
 		</div>
+		<div id= "debugDiv" style="border:2px"></div>
 		<!-- quick script call to init -->
 		<script type="text/javascript">init();</script>
 	</BODY>

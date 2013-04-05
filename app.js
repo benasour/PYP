@@ -33,10 +33,11 @@ io.sockets.on('connection', function (socket) {
   
   socket.on('startGame', function (name) {
     console.log('I am the Start Game function!');
-	//this is where we loop
-	//TODO: loop this till someone hits a 10
-	var data = {};
 	
+	var trackLength = 8; //from index.html
+	
+	//this is where we loop
+	var data = {};
 	//um, this number thing is wierd - make it true/false
 	var finishLine=0;
 	while (finishLine<=100)
@@ -50,16 +51,18 @@ io.sockets.on('connection', function (socket) {
 		
 		for (var j = 0; j<Object.keys(players2).length; j++)
 		{
-			if (players2[Object.keys(players2)[j]] >=8)
+			if (players2[Object.keys(players2)[j]] >= trackLength)
 			{
 				finishLine=101;
 			}
 		}
-		console.log(players2);		
+		console.log(players2);
+		socket.emit('partialBoardUpdate', players2);
+		socket.broadcast.emit('partialBoardUpdate', players2);		
 	}
-	//send to UI for updating
-	socket.emit('boardUpdate', players2);
-	socket.broadcast.emit('boardUpdate', players2);
+	//send the final result to UI for updating
+	//socket.emit('finalBoardUpdate', players2);
+	//socket.broadcast.emit('finalBoardUpdate', players2);
 	
   });
   
