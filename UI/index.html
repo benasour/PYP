@@ -23,8 +23,7 @@
 		  });
 		  
 		  socket.on('partialBoardUpdate', function (data) {
-			var debugDiv = document.getElementById('debugDiv');
-			debugDiv.innerHTML += JSON.stringify(data) + '<br/>';
+			writeDebug(data);
 		  });
 		
 		//store global variable
@@ -33,6 +32,12 @@
 		
 		
 		//javascript helper functions
+		function writeDebug(data)
+		{
+			var debugDiv = document.getElementById('debugDiv');
+			debugDiv.innerHTML += JSON.stringify(data) + '<br/>';
+		}
+		
 		//init function sets up the inital layout of the page
 		function init()
 		{
