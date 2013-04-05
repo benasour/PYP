@@ -11,6 +11,11 @@
 			//alert('playerListUpdate');
 			drawNames(data);
 		  });
+		  socket.on('boardUpdate', function (data) {
+			alert('boardUpdate');
+			//renderBoard(data);
+		  });
+		  
 		<!--All script in this tag is run when the page loads-->
 		//alert("Welcome to the batcave!");
 		
@@ -55,9 +60,12 @@
 			receiveData(JSON.stringify(data));
 		}
 		
-		function renderBoard()
+		function renderBoard(inputNamesArray)
 		{
-		   
+			if (inputNamesArray)
+			{
+				namesArray = inputNamesArray;
+			}
 			var grid = document.getElementById('gameBoard');
 			grid.innerHTML = "";
 			
@@ -122,6 +130,7 @@
 			//JSON.stringify(namesArray);
 			socket.emit('join',name.value);
 			
+			/*
 			if (Object.keys(namesArray).length>=6)
 			{
 				alert("Sorry, this game has a max of 6 players.");
@@ -136,7 +145,7 @@
 				name.value = "";
 				drawNames();
 			}
-			
+			*/
 			
 		}
 		
@@ -166,7 +175,6 @@
 			socket.emit('startGame',name.value);
 			
 			//renderBoard();
-			
 			//send list of all player objects to server
 			//alert(JSON.stringify(namesArray));
 			

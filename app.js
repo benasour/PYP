@@ -36,14 +36,30 @@ io.sockets.on('connection', function (socket) {
 	//this is where we loop
 	//TODO: loop this till someone hits a 10
 	var data = {};
-	for (var i = 0; i<Object.keys(players2).length; i++)
-		data[Object.keys(players2)[i]] = players2[Object.keys(players2)[i]];
-	var rnd = Math.floor(Math.random()*Object.keys(players2).length);
-	data[Object.keys(data)[rnd]]++;
 	
+	//um, this number thing is wierd - make it true/false
+	var finishLine=0;
+	while (finishLine<=100)
+	{
+		finishLine++;
+		for (var i = 0; i<Object.keys(players2).length; i++)
+			data[Object.keys(players2)[i]] = players2[Object.keys(players2)[i]];
+		var rnd = Math.floor(Math.random()*Object.keys(players2).length);
+		players2[Object.keys(data)[rnd]]++;
+		//receiveData(JSON.stringify(data));
+		
+		for (var j = 0; j<Object.keys(players2).length; j++)
+		{
+			if (players2[Object.keys(players2)[j]] >=8)
+			{
+				finishLine=101;
+			}
+		}
+		console.log(players2);		
+	}
 	//send to UI for updating
-	socket.emit('boardUpdate', data);
-	socket.broadcast.emit('boardUpdate', data);
+	socket.emit('boardUpdate', players2);
+	socket.broadcast.emit('boardUpdate', players2);
 	
   });
   
