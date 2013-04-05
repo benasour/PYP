@@ -16,7 +16,8 @@
 		  });
 		  
 		  socket.on('finalBoardUpdate', function (data) {
-			debugDiv.innerHTML = JSON.stringify(data);
+			//debugDiv.innerHTML = JSON.stringify(data);
+			receiveData(data);
 			//renderBoard(data); // this isnt working, not sure why it doesnt draw the board correctly
 			//receiveData(JSON.stringify(data)); // nope doesnt work either
 			
@@ -24,12 +25,15 @@
 		  
 		  socket.on('partialBoardUpdate', function (data) {
 			writeCounter++;
-			myVar=setTimeout(function(){writeDebug(data)},writeCounter*1000);
+			myVar=setTimeout(function(){
+				//writeDebug(data);
+				receiveData(data);
+			},writeCounter*1000);
 		  });
 		
 		//store global variable
 		var namesArray;
-		var trackLength = 7;
+		var trackLength = 8;
 		var writeCounter = 0;
 		
 		//javascript helper functions
@@ -37,6 +41,7 @@
 		{
 			var debugDiv = document.getElementById('debugDiv');
 			debugDiv.innerHTML += JSON.stringify(data) + '<br/>';
+			return;
 		}
 		
 		//init function sets up the inital layout of the page
@@ -51,7 +56,7 @@
 		
 		function receiveData(gameObject)
 		{
-			gameObject = JSON.parse(gameObject);
+			//gameObject = JSON.parse(gameObject);
 			//Writes game object to page
 			var winner = -1;
 			for (var i = 0; i<Object.keys(namesArray).length; i++)
@@ -63,7 +68,11 @@
 			drawNames();
 			renderBoard();
 			if (winner != -1)
-				showResults(winner);
+			{
+				setTimeout(function(){
+					showResults(winner);
+				}, 1000);
+			}
 		}
 		function fakeData()
 		{
@@ -141,7 +150,7 @@
 			//JSON.stringify(namesArray);
 			socket.emit('join',name.value);
 			
-			/*
+			
 			if (Object.keys(namesArray).length>=6)
 			{
 				alert("Sorry, this game has a max of 6 players.");
@@ -156,7 +165,7 @@
 				name.value = "";
 				drawNames();
 			}
-			*/
+			
 			
 		}
 		
@@ -185,7 +194,7 @@
 			
 			socket.emit('startGame',name.value);
 			
-			//renderBoard();
+			renderBoard();
 			//send list of all player objects to server
 			//alert(JSON.stringify(namesArray));
 			
@@ -211,7 +220,6 @@
 		<div id="game">
 			<table id="gameBoard" border="0">
 			</table>
-			<input type="button" class="button" value="increment" onclick="fakeData()"/>
 		</div>
 		<div id="results">
 			<p id="winner"></p>
