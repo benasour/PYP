@@ -2,7 +2,15 @@ var app = require('http').createServer(handler)
   , io = require('socket.io').listen(app)
   , fs = require('fs')
 
-app.listen(8080);
+ //heroku suggestion to use port 8080
+ var port = process.env.PORT || 8080;
+ app.listen(port);
+
+// assuming io is the Socket.IO server object
+io.configure(function () { 
+  io.set("transports", ["xhr-polling"]); 
+  io.set("polling duration", 10); 
+});
 
 function handler (req, res) {
   fs.readFile(__dirname + '/UI/index.html',
