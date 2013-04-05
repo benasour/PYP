@@ -57,12 +57,12 @@ io.sockets.on('connection', function (socket) {
 			}
 		}
 		console.log(players2);
-		//socket.emit('partialBoardUpdate', players2);
-		//socket.broadcast.emit('partialBoardUpdate', players2);		
+		socket.emit('partialBoardUpdate', players2);
+		socket.broadcast.emit('partialBoardUpdate', players2);		
 	}
 	//send the final result to UI for updating
-	socket.emit('finalBoardUpdate', players2);
-	socket.broadcast.emit('finalBoardUpdate', players2);
+	//socket.emit('finalBoardUpdate', players2);
+	//socket.broadcast.emit('finalBoardUpdate', players2);
 	
   });
   
