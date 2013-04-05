@@ -10,9 +10,9 @@
 			if (window.location.toString().indexOf("localhost")>=0)
 			{
 				//localhost
-				socketConnectionURL ="http://localhost:5000";
+				socketConnectionURL ="http://localhost:8080";
 			}
-		 var socket = io.connect('http://localhost:8080');
+		 var socket = io.connect(socketConnectionURL);
 		 
 		 socket.on('connect', function (data) {
 			//alert('client is connected');
