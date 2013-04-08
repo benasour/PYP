@@ -1,6 +1,9 @@
-var app = require('http').createServer(handler)
-  , io = require('socket.io').listen(app)
-  , fs = require('fs')
+var express = require('express');
+var http = require('http');
+var socket = require('socket.io');
+
+var app = express();
+var io = socket.listen(http.createServer(app));
 
  //heroku suggestion to use port 8080
  var port = process.env.PORT || 8080;
@@ -12,18 +15,9 @@ io.configure(function () {
   io.set("polling duration", 10); 
 });
 
-function handler (req, res) {
-  fs.readFile(__dirname + '/UI/index.html',
-  function (err, data) {
-    if (err) {
-      res.writeHead(500);
-      return res.end('Error loading index.html');
-    }
-
-    res.writeHead(200);
-    res.end(data);
-  });
-}
+app.get('/', function(req, res) {
+  res.sendfile('UI/index.html');
+});
 
 var players = new Array();
 var players2 = {};
