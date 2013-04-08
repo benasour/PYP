@@ -1,13 +1,16 @@
 var express = require('express');
 var http = require('http');
 var socket = require('socket.io');
+var express = require('express');
 
 var app = express();
-var io = socket.listen(http.createServer(app));
+var server = http.createServer(app);
+var io = socket.listen(server);
+server.listen(8080);
 
- //heroku suggestion to use port 8080
- var port = process.env.PORT || 8080;
- app.listen(port);
+//heroku suggestion to use port 8080
+var port = process.env.PORT || 8080;
+server.listen(8080);
 
 // assuming io is the Socket.IO server object
 io.configure(function () { 
@@ -17,6 +20,10 @@ io.configure(function () {
 
 app.get('/', function(req, res) {
   res.sendfile('UI/index.html');
+});
+
+app.get('/socket.io/socket.io.js', function(req, res) {
+  res.sendfile('node_modules/socket.io/lib/socket.io.js');
 });
 
 var players = new Array();
