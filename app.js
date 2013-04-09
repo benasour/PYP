@@ -10,7 +10,7 @@ server.listen(8080);
 
 //heroku suggestion to use port 8080
 var port = process.env.PORT || 8080;
-server.listen(8080);
+server.listen(port);
 
 // assuming io is the Socket.IO server object
 io.configure(function () { 
@@ -18,12 +18,16 @@ io.configure(function () {
   io.set("polling duration", 10); 
 });
 
+//TODO: add environment specific settings
+
+//controller routes
 app.get('/', function(req, res) {
-  res.sendfile('UI/index.html');
+  res.sendfile(__dirname + '/UI/index.html');
 });
 
-app.get('/socket.io/socket.io.js', function(req, res) {
-  res.sendfile('node_modules/socket.io/lib/socket.io.js');
+//look into using express.static
+app.get('/style.css', function(req, res) {
+  res.sendfile(__dirname + '/UI/style.css');
 });
 
 var players = new Array();
