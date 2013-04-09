@@ -30,6 +30,14 @@ app.get('/style.css', function(req, res) {
   res.sendfile(__dirname + '/UI/style.css');
 });
 
+app.get('/connections.js', function(req, res) {
+  res.sendfile(__dirname + '/UI/connections.js');
+});
+
+app.get('/interactions.js', function(req, res) {
+  res.sendfile(__dirname + '/UI/interactions.js');
+});
+
 var players = new Array();
 var players2 = {};
 io.sockets.on('connection', function (socket) {
