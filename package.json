@@ -2,11 +2,11 @@
   "name": "PYP",
   "version": "0.0.1",
   "dependencies": {
-    "express": "3.0.0"
+    "express": "3.1.1",
+    "socket.io": "0.9.6"
   },
   "engines": {
     "node": "0.10.2",
-    "npm": "1.2.15",
-	"socket.io": "0.9.6"
+    "npm": "1.2.15"
   }
 }
