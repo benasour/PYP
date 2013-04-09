@@ -34,7 +34,7 @@ function receiveData(gameObject)
 	for (var i = 0; i<Object.keys(namesArray).length; i++)
 	{
 		namesArray[Object.keys(namesArray)[i]] = gameObject[Object.keys(namesArray)[i]];
-		if (namesArray[Object.keys(namesArray)[i]] == trackLength-1)
+		if (namesArray[Object.keys(namesArray)[i]] >= trackLength)
 			winner=i;
 		//if this client hasn't started but a piece moved, start.
 		if (!started && namesArray[Object.keys(namesArray)[i]] != 0)
@@ -103,14 +103,14 @@ function renderBoard(inputNamesArray)
 	
 	//now the bulk of the work -- print out the grid and player locations
 	gridTest.innerHTML += html;  
-	for (var i = 0; i < trackLength; i++) //for tracklength
+	for (var i = 0; i <= trackLength; i++) //for tracklength
 	{
 		gridTest.innerHTML += "<tr>";
 		html = "";
 		for (var j = 0; j < Object.keys(namesArray).length; j++) //for all players
 		{
 			//if a player is in this cell, print their number and add class for styling
-			if (namesArray[Object.keys(namesArray)[j]] == 7-i)
+			if (namesArray[Object.keys(namesArray)[j]] == trackLength-i)
 			{
 				html += "<td>";
 				html +=  "|  <a class='hasPlayer'>" + (j+1) + "</a>|" ;
@@ -140,19 +140,20 @@ function renderBoard(inputNamesArray)
 // Take a submitted name and add it to our data/init the player
 function addName ()
 {
+	var name = document.getElementById('nameInputBox');
 	//check if we have too many players or if this player exists
 	if (Object.keys(namesArray).length>=6)
 	{
 		alert("Sorry, this game has a max of 6 players.");
 	}
-	else if (namesArray[name.value] == 0)
+	else if (name.value in namesArray)
 	{
 		alert("Sorry, no duplicate names allowed");
 	}
 	else //if conditions for adding are met, upload it
 	{
 		//grab name from doc, send it to server
-		var name = document.getElementById('nameInputBox');
+		
 		socket.emit('join',name.value);
 		
 		//updates local vars (REMOVE? since we use server data to update list now)
@@ -181,6 +182,7 @@ function drawNames(inputNamesArray)
 // switch from player adding view to game view
 function startGame()
 {
+	started=true;
 	// but make sure that the player isn't racing alone first
 	if (Object.keys(namesArray).length <=1)
 	{
@@ -189,8 +191,8 @@ function startGame()
 	}
 	
 	//works in html5
-	document.getElementById('init').classList.toggle("hidden");
-	document.getElementById('game').classList.toggle("hidden");
+	document.getElementById('init').classList.add("hidden");
+	document.getElementById('game').classList.remove("hidden");
 	
 	//tell the server we want to start!
 	socket.emit('startGame',name.value);
@@ -205,8 +207,8 @@ function startGame()
 function showResults(winnerVal)
 {
 	//works in html5
-	document.getElementById('game').classList.toggle("hidden");
-	document.getElementById('results').classList.toggle("hidden");
+	document.getElementById('game').classList.add("hidden");
+	document.getElementById('results').classList.remove("hidden");
 	
 	//show the winning player and set the an <a> tag with id for style
 	document.getElementById('winner').innerHTML = "Winner was: <a id='winningPlayer'>" + Object.keys(namesArray)[winnerVal] + "</a>";

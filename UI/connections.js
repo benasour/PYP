@@ -1,3 +1,5 @@
+ var writeCounter=0;
+ 
  //socket functions for communication and event handling from the server
  //PRD
 	var socketConnectionURL = "http://boiling-meadow-5174.herokuapp.com/";
