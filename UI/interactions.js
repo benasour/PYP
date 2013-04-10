@@ -1,7 +1,7 @@
 //store global variable
 var namesArray;
 var trackLength = 8;
-var started=false;
+var started=true;
 
 //function to print data (presumably from server) to a div on html page
 function writeDebug(data)
@@ -20,9 +20,13 @@ function init()
 	namesArray = {};
 	namesList.innerHTML = "";
 	resetWriteCounter();
-	
+
 	//TODO: tell the server that we're starting a new round
-	socket.emit('new');
+	if (started) //if this is still set from last game we're the first to hit new game
+		socket.emit('new');	//so tell the server!
+	
+	started = false;
+	socket.emit('requestPlayers');
 }
 
 /*  takes in data from the server, processes it into namesArray, 
@@ -51,6 +55,9 @@ function receiveData(gameObject)
 				started=true; //sent from server so we don't need to tell it
 				startGame();
 				break;
+			case "new":
+				started = false; //stops from emitting once they're done viewing results
+				break
 			case "end": //not needed, but probably should do -- work on server, display on client
 				
 				
@@ -61,7 +68,7 @@ function receiveData(gameObject)
 	else if (type == "players")
 	{
 		/* game object data, has all the names/positions */
-		
+		namesArray = {};
 		//go through the data, deep copy to namesArray
 		//also checks for win condition while we're at it, and sets a flag accordingly
 		var winner = -1;
@@ -225,20 +232,22 @@ function drawNames(inputNamesArray)
 function startGame()
 {
 	//tell the server we want to start!
-	if (!started)
-		socket.emit('startGame',name.value);
-	
-	started=true; //just to be safe
-	// but make sure that the player isn't racing alone first
-	if (Object.keys(namesArray).length <=1)
-	{
-		alert("Need at least two players to play!");
-		exit;
+	if (!started){
+		// but make sure that the player isn't racing alone first
+		if (Object.keys(namesArray).length <=1)
+		{
+			alert("Need at least two players to play!");
+			exit;
+		}
+		socket.emit('startGame');
 	}
+	started=true; //just to be safe
+	resetWriteCounter();
 	
 	//works in html5
 	document.getElementById('init').classList.add("hidden");
 	document.getElementById('game').classList.remove("hidden");
+	document.getElementById('results').classList.add("hidden");
 	
 	renderBoard();
 	//send list of all player objects to server
@@ -252,6 +261,7 @@ function showResults(winnerVal)
 	//works in html5
 	document.getElementById('game').classList.add("hidden");
 	document.getElementById('results').classList.remove("hidden");
+	document.getElementById('init').classList.add("hidden");
 	
 	//show the winning player and set the an <a> tag with id for style
 	document.getElementById('winner').innerHTML = "Winner was: <a id='winningPlayer'>" + Object.keys(namesArray)[winnerVal] + "</a>";
