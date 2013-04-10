@@ -13,12 +13,11 @@ var port = process.env.PORT || 8080;
 server.listen(port);
 
 // assuming io is the Socket.IO server object
-io.configure(function () { 
+io.configure('production', function () {
   io.set("transports", ["xhr-polling"]); 
-  io.set("polling duration", 10); 
+  io.set("polling duration", 10);
+  io.enable('browser client minification');
 });
-
-//TODO: add environment specific settings
 
 //controller routes
 app.get('/', function(req, res) {
