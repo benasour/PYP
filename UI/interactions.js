@@ -19,6 +19,10 @@ function init()
 	document.getElementById('results').classList.add("hidden");
 	namesArray = {};
 	namesList.innerHTML = "";
+	resetWriteCounter();
+	
+	//TODO: tell the server that we're starting a new round
+	socket.emit('new');
 }
 
 /*  takes in data from the server, processes it into namesArray, 
@@ -28,31 +32,69 @@ function receiveData(gameObject)
 {
 	//gameObject = JSON.parse(gameObject); //needed for fakeData, but not server apparently
 	
-	//go through the data, deep copy to namesArray
-	//also checks for win condition while we're at it, and sets a flag accordingly
-	var winner = -1;
-	for (var i = 0; i<Object.keys(namesArray).length; i++)
+	/*thinking a new format is in order!
+	  {type: {data}}
+	 	{status: start}
+		{status: end, winner: ...? }
+			use winner:name, winner:index, or namesArray?
+	    {names: {asdf:0, jkl: 1, qwerty: 6, ... } }
+	*/
+	var type = Object.keys(gameObject)[0];
+	var val = gameObject[type];
+	
+	if (type == "status")
 	{
-		namesArray[Object.keys(namesArray)[i]] = gameObject[Object.keys(namesArray)[i]];
-		if (namesArray[Object.keys(namesArray)[i]] >= trackLength)
-			winner=i;
-		//if this client hasn't started but a piece moved, start.
-		if (!started && namesArray[Object.keys(namesArray)[i]] != 0)
+		/* game status message, tells if game started/ended/etc */
+		switch (val)
 		{
-			started = true;
-			startGame();
+			case "start":
+				started=true; //sent from server so we don't need to tell it
+				startGame();
+				break;
+			case "end": //not needed, but probably should do -- work on server, display on client
+				
+				
+				showResults();
+				break;
 		}
 	}
-	
-	//use the results appropriately
-	drawNames();
-	renderBoard();
-	if (winner != -1)
+	else if (type == "players")
 	{
-		setTimeout(function(){
-			showResults(winner);
-		}, 1000);
+		/* game object data, has all the names/positions */
+		
+		//go through the data, deep copy to namesArray
+		//also checks for win condition while we're at it, and sets a flag accordingly
+		var winner = -1;
+		//document.getElementById("debugDiv").innerHTML = JSON.stringify(gameObject) + "<br>" + JSON.stringify(val);
+		for (var i = 0; i<Object.keys(val).length; i++)
+		{
+			namesArray[Object.keys(val)[i]] = val[Object.keys(val)[i]];
+			if (namesArray[Object.keys(namesArray)[i]] >= trackLength)
+				winner=i;
+			//if this client hasn't started but a piece moved, start.
+			if (!started && namesArray[Object.keys(namesArray)[i]] != 0)
+			{
+				started = true;
+				startGame();
+			}
+		}
+		
+		//use the results appropriately
+		drawNames();
+		renderBoard();
+		if (winner != -1)
+		{
+			setTimeout(function(){
+				showResults(winner);
+			}, 1000);
+		}
 	}
+	else
+	{
+		//TODO: ERROR HANDLING
+	}
+	
+	
 }
 
 /*	simple function to deep copy our data, then increment one piece at 
@@ -182,7 +224,11 @@ function drawNames(inputNamesArray)
 // switch from player adding view to game view
 function startGame()
 {
-	started=true;
+	//tell the server we want to start!
+	if (!started)
+		socket.emit('startGame',name.value);
+	
+	started=true; //just to be safe
 	// but make sure that the player isn't racing alone first
 	if (Object.keys(namesArray).length <=1)
 	{
@@ -193,9 +239,6 @@ function startGame()
 	//works in html5
 	document.getElementById('init').classList.add("hidden");
 	document.getElementById('game').classList.remove("hidden");
-	
-	//tell the server we want to start!
-	socket.emit('startGame',name.value);
 	
 	renderBoard();
 	//send list of all player objects to server

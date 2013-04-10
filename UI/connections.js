@@ -1,5 +1,6 @@
  var writeCounter=0;
  
+ function resetWriteCounter(){ writeCounter=0; return;}
  //socket functions for communication and event handling from the server
  //PRD
 	var socketConnectionURL = "http://boiling-meadow-5174.herokuapp.com/";
@@ -16,7 +17,13 @@
   
   socket.on('playerListUpdate', function (data) {
 	//alert('playerListUpdate');
-	drawNames(data);
+	
+	//document.getElementById("debugDiv").innerHTML = JSON.stringify(data);
+	receiveData(data);
+  });
+  
+  socket.on('sendStatus', function (data) {
+	receiveData(data);
   });
   
   socket.on('finalBoardUpdate', function (data) {
@@ -31,6 +38,7 @@
 	writeCounter++;
 	myVar=setTimeout(function(){
 		//writeDebug(data);
+		//document.getElementById("debugDiv").innerHTML = JSON.stringify(data);
 		receiveData(data);
 	},writeCounter*1000);
   });
