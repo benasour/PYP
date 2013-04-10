@@ -6,7 +6,6 @@ var express = require('express');
 var app = express();
 var server = http.createServer(app);
 var io = socket.listen(server);
-server.listen(8080);
 
 //heroku suggestion to use port 8080
 var port = process.env.PORT || 8080;
