@@ -1,7 +1,7 @@
 //store global variable
-var namesArray;
+var namesArray={};
 var trackLength = 8;
-var started=true;
+var started=false;
 
 //function to print data (presumably from server) to a div on html page
 function writeDebug(data)
@@ -17,8 +17,7 @@ function init()
 	document.getElementById('init').classList.remove("hidden");
 	document.getElementById('game').classList.add("hidden");
 	document.getElementById('results').classList.add("hidden");
-	namesArray = {};
-	namesList.innerHTML = "";
+	document.getElementById('players').classList.remove("hidden");
 	resetWriteCounter();
 
 	//TODO: tell the server that we're starting a new round
@@ -248,6 +247,7 @@ function startGame()
 	document.getElementById('init').classList.add("hidden");
 	document.getElementById('game').classList.remove("hidden");
 	document.getElementById('results').classList.add("hidden");
+	document.getElementById('players').classList.remove("hidden");
 	
 	renderBoard();
 	//send list of all player objects to server
@@ -262,6 +262,7 @@ function showResults(winnerVal)
 	document.getElementById('game').classList.add("hidden");
 	document.getElementById('results').classList.remove("hidden");
 	document.getElementById('init').classList.add("hidden");
+	document.getElementById('players').classList.add("hidden");
 	
 	//show the winning player and set the an <a> tag with id for style
 	document.getElementById('winner').innerHTML = "Winner was: <a id='winningPlayer'>" + Object.keys(namesArray)[winnerVal] + "</a>";
