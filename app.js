@@ -35,6 +35,15 @@ app.get('/', function(req, res) {
   res.render('index');
 });
 
+app.get('/games', function(req, res) {
+  //TODO: Get list of games from mongo DB
+  var gamesList = new Array();
+  gamesList.push({name: "Horses"});
+  gamesList.push({name: "Another Drinking Game To Implement"});
+
+  res.render('games', {games: gamesList});
+});
+
 //look into using express.static
 app.get('/style.css', function(req, res) {
   res.sendfile(__dirname + '/UI/style.css');
