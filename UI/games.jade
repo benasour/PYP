@@ -1,0 +1,9 @@
+doctype 5
+html(lang="en")
+  head
+    title Games
+  body
+    ul
+      each game in games
+        li
+          a(href="/") #{game.name}
