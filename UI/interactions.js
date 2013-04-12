@@ -1,7 +1,9 @@
 //store global variable
 var namesArray={};
+var cards={};
 var trackLength = 8;
 var started=false;
+var suits={0:"\u2660", 1:"\u2665", 2:"\u2663", 3:"\u2666"};
 
 //function to print data (presumably from server) to a div on html page
 function writeDebug(data)
@@ -24,6 +26,7 @@ function init()
 	if (started) //if this is still set from last game we're the first to hit new game
 		socket.emit('new');	//so tell the server!
 	
+	cards = {0:0, 1:0, 2:0, 3:0};
 	started = false;
 	socket.emit('requestPlayers');
 }
@@ -122,6 +125,8 @@ function fakeData()
 */
 function renderBoard(inputNamesArray)
 {
+	//TEMPORARY NOTE: \u2660 - \u2667 TO GET CARD SUITS
+
 	//override for namesArray (TESTING ONLY)
 	if (inputNamesArray)
 	{
@@ -144,8 +149,8 @@ function renderBoard(inputNamesArray)
 	var html = "";
 	
 	//merge cells in top row and print out finish line of appropriate length
-	html += "<tr><td class='border' colspan='" + Object.keys(namesArray).length + "'>";
-	for( var k = 0; k < Object.keys(namesArray).length ; k++)
+	html += "<tr><td class='border' colspan='" + Object.keys(cards).length + "'>";
+	for( var k = 0; k < Object.keys(cards).length ; k++)
 		html += "------";
 	html += "</td></tr>";
 	
@@ -155,13 +160,13 @@ function renderBoard(inputNamesArray)
 	{
 		gridTest.innerHTML += "<tr>";
 		html = "";
-		for (var j = 0; j < Object.keys(namesArray).length; j++) //for all players
+		for (var j = 0; j < Object.keys(cards).length; j++) //for all players
 		{
 			//if a player is in this cell, print their number and add class for styling
-			if (namesArray[Object.keys(namesArray)[j]] == trackLength-i)
+			if (cards[Object.keys(cards)[j]] == trackLength-i)
 			{
 				html += "<td>";
-				html +=  "|  <a class='hasPlayer'>" + (j+1) + "</a>|" ;
+				html +=  "|  <a class='hasPlayer'>" + suits[j] + "</a>|" ;
 			}
 			else //no player, so just a cell with a placeholder dot
 			{
@@ -175,8 +180,8 @@ function renderBoard(inputNamesArray)
 	
 	//merge cells in bottom row and print out bottom border line of appropriate length
 	html = "";
-	html += "<tr><td class='border' colspan='" + Object.keys(namesArray).length + "'>";
-	for( var k = 0; k < Object.keys(namesArray).length ; k++)
+	html += "<tr><td class='border' colspan='" + Object.keys(cards).length + "'>";
+	for( var k = 0; k < Object.keys(cards).length ; k++)
 		html += "------";
 	html += "</td></tr>";
 	gridTest.innerHTML += html; 
@@ -186,9 +191,11 @@ function renderBoard(inputNamesArray)
 }
 
 // Take a submitted name and add it to our data/init the player
+// now the namesArray number portion will contain the bet instead of position
 function addName ()
 {
 	var name = document.getElementById('nameInputBox');
+	var bet = document.getElementById('betInputBox');
 	//check if we have too many players or if this player exists
 	if (Object.keys(namesArray).length>=6)
 	{
@@ -196,17 +203,22 @@ function addName ()
 	}
 	else if (name.value in namesArray)
 	{
-		alert("Sorry, no duplicate names allowed");
+		alert("Sorry, no duplicate names allowed.");
+	}
+	else if (name.value.length<=0 || bet.value.length<=0)
+	{
+		alert("Sorry, you must fill out both your name and your bet to proceed.");
 	}
 	else //if conditions for adding are met, upload it
 	{
 		//grab name from doc, send it to server
 		
-		socket.emit('join',name.value);
+		socket.emit('join',name.value, bet.value);
 		
 		//updates local vars (REMOVE? since we use server data to update list now)
-		namesArray[name.value]=0;
+		namesArray[name.value]=bet.value;
 		name.value = "";
+		bet.value = "";
 		drawNames();
 	}
 }
@@ -224,7 +236,7 @@ function drawNames(inputNamesArray)
 	var namesList = document.getElementById('namesList');
 	namesList.innerHTML = "";
 	for (var i = 0; i<Object.keys(namesArray).length; i++) //for all players
-		namesList.innerHTML += "<li>" + Object.keys(namesArray)[i] + "</li>";	
+		namesList.innerHTML += "<li>" + Object.keys(namesArray)[i] + " - " + namesArray[Object.keys(namesArray)[i]] + "</li>";	
 }
 
 // switch from player adding view to game view

@@ -60,9 +60,9 @@ io.sockets.on('connection', function (socket) {
 	socket.broadcast.emit('playerListUpdate', toSend);
   });
   
-  socket.on('join', function (name) {
+  socket.on('join', function (name, bet) {
     console.log('I am the Join function!');
-	players[name]=0;
+	players[name]=bet;
 	//wrap in another layer to format it as a type for interactions.js
 	var toSend = {};
 	toSend["players"] = players;

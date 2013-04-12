@@ -8,7 +8,8 @@
 	<BODY>
 		
 		<div id="init">
-			Enter your Name: <input type="text" id='nameInputBox' onkeydown="if (event.keyCode == 13) addName()" />
+			Enter your Name: <input type="text" id='nameInputBox' onkeydown="if (event.keyCode == 13) addName()" /><br>
+			Enter your Bet: <input type="text" id='betInputBox' onkeypress="if (event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;" onkeydown="if (event.keyCode==13) addName()" />
 			<br />
 			<input type="button"class="add" value ="Add Name" onclick="addName()"/>
 			<input type="button" class="button" value="Start Game" onclick="startGame()"/>
