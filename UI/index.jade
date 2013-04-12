@@ -1,30 +1,30 @@
 doctype 5
 html(lang="en")
   head
-    link(rel="stylesheet", href="/style.css")
-    script(src="/socket.io/socket.io.js")
-    script(src="/interactions.js")
-    script(src="/connections.js")
+  link(rel="stylesheet", href="/style.css")
+  script(src="/socket.io/socket.io.js")
+  script(src="/interactions.js")
+  script(src="/connections.js")
   body
-    #init
-      label(for="nameInputBox") Enter your Name: 
-      input(type="text", id="nameInputBox", onkeydown="if (event.keyCode == 13) addName();")
-      label(for="betInputBox") Enter your Bet: 
-      input(type="text" id="betInputBox" onkeypress="if (event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;" onkeydown="if (event.keyCode==13) addName();")
-        
-      br
+  #init
+    label(for="nameInputBox") Enter your Name: 
+    input(type="text", id="nameInputBox", onkeydown="if (event.keyCode == 13) addName();")
+    label(for="betInputBox") Enter your Bet: 
+    input(type="text" id="betInputBox" onkeypress="if (event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;" onkeydown="if (event.keyCode==13) addName();")
     
-      input(type="button", class="add", value="Add Name", onclick="addName()")
-      input(type="button", class="button", value="Start Game", onclick="startGame()")
-    #game
-      table(id="gameBoard", border="0")
-    #results
-      p#winner
-      input(type="button", class="end", value="New Game", onClick="init();")
-      br
-      br
-    #players Players:
-      ol#namesList
-    div(id="debugDiv", style="border:2px")
-    script
-      init();
+    br
+  
+    input(type="button", class="add", value="Add Name", onclick="addName()")
+    input(type="button", class="button", value="Start Game", onclick="startGame()")
+  #game
+    table(id="gameBoard", border="0")
+  #results
+    p#winner
+    input(type="button", class="end", value="New Game", onClick="init();")
+    br
+    br
+  #players Players:
+    ol#namesList
+  div(id="debugDiv", style="border:2px")
+  script
+    init();
