@@ -41,4 +41,17 @@
     //document.getElementById("debugDiv").innerHTML = JSON.stringify(data);
     receiveData(data);
   },writeCounter*1000);
+  
+  //these next two could go to receive data and have a case in the switch, but...
+  //call fn to advance the given suit one space
+  socket.on('incrementCard', function(data) {
+    incrementCard(data);
+  });
+  
+  //call fn to display this card and move the corresponding suit back one space
+  socket.on('flipCard', function(data) {
+    flipCard(data);
+  });
+  
+  
   });
