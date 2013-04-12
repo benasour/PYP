@@ -1,45 +1,45 @@
 td:nth-child(even) .hasPlayer{
-	color:red;
+    color:red;
 }
 td:nth-child(odd) .hasPlayer{
-	color:black;
+    color:black;
 }
 #winningPlayer {
-	color: red;
-	font-size: 1.5em;
+    color: red;
+        -size: 1.5em;
 }
 table {
-	font-size: 1.25em;
-    	border-collapse: collapse; /* 'cellspacing' equivalent */
-	color: green;
+        -size: 1.25em;
+        border-collapse: collapse; /* 'cellspacing' equivalent */
+    color: green;
 }
 table td, table th{
-	text-align:center;
-	padding: 0; /* 'cellpadding' equivalent */
+    text-align:center;
+    padding: 0; /* 'cellpadding' equivalent */
 }
 
 .hidden {
-	display: none;
+    display: none;
 }
 
 .button:hover{
- 	background: #44DD55;
+    background: #44DD55;
 }
 .button:active{
-	background: #10B630;
+    background: #10B630;
 }
 
 .add:hover{
- 	background: #77BBFF;
+     background: #77BBFF;
 }
 .add:active{
-	background: #6195FF;
+    background: #6195FF;
 }
 
 .end:hover{
- 	background: #FF4F4F;
+     background: #FF4F4F;
 }
 .end:active{
-	background: #EE3333;
+    background: #EE3333;
 }
 
