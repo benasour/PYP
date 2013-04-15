@@ -243,7 +243,7 @@ function addName ()
   {
     alert("Sorry, this game has a max of 6 players.");
   }*/
-  else if (name.value in namesArray)
+  if (name.value in namesArray)
   {
     alert("Sorry, no duplicate names allowed.");
   }
