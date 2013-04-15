@@ -239,10 +239,10 @@ function addName ()
   var betChoice = document.getElementById('betChoice');
   var bet = document.getElementById('betInputBox');
   //check if we have too many players or if this player exists
-  if (Object.keys(namesArray).length>=6)
+  /*if (Object.keys(namesArray).length>=6)
   {
     alert("Sorry, this game has a max of 6 players.");
-  }
+  }*/
   else if (name.value in namesArray)
   {
     alert("Sorry, no duplicate names allowed.");

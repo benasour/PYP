@@ -147,6 +147,7 @@ io.sockets.on('connection', function (socket) {
         if (cards[Object.keys(cards)[i]] < curSide)
           flip = false;
       //someone crossed, so flip and decrement (and tell clients)
+      //someone crossed, so flip and decrement (and tell clients)
       if (flip) 
       {
         curSide++;
