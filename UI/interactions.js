@@ -91,9 +91,15 @@ function receiveData(gameObject)
           startGame();
           break;
         case "new":
+          document.getElementById("addButton").disabled = false;
+          document.getElementById("startButton").disabled = false;
           cards = {0:0, 1:0, 2:0, 3:0};
           started = false; //stops from emitting once they're done viewing results
           break
+        case "started":
+          document.getElementById("addButton").disabled = true;
+          document.getElementById("startButton").disabled = true;
+          break;
         case "end": //not needed, but probably should do -- work on server, display on client
           
           showResults();
