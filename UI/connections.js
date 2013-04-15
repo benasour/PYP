@@ -35,23 +35,27 @@
   });
   
   socket.on('partialBoardUpdate', function (data) {
-  writeCounter++;
-  myVar=setTimeout(function(){
-    //writeDebug(data);
-    //document.getElementById("debugDiv").innerHTML = JSON.stringify(data);
-    receiveData(data);
-  },writeCounter*1000);
+    writeCounter++;
+    myVar=setTimeout(function(){
+      //writeDebug(data);
+      //document.getElementById("debugDiv").innerHTML = JSON.stringify(data);
+      receiveData(data);
+    },writeCounter*1000);
+  });
   
   //these next two could go to receive data and have a case in the switch, but...
   //call fn to advance the given suit one space
   socket.on('incrementCard', function(data) {
-    incrementCard(data);
+    writeCounter++;
+    myVar=setTimeout(function(){
+      incrementCard(data);
+    },writeCounter*1000);
   });
   
   //call fn to display this card and move the corresponding suit back one space
   socket.on('flipCard', function(data) {
-    flipCard(data);
+      myVar=setTimeout(function(){
+      flipCard(data);
+    },(writeCounter)*1000+250);
   });
   
-  
-  });

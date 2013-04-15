@@ -5,8 +5,7 @@ td:nth-child(odd) .hasPlayer, .black{
   color:black;
 }
 #winningPlayer {
-  color: red;
-  font-size: 1.5em;
+  font-size: 1.75em;
 }
 table {
   font-size: 1.25em;

@@ -1,5 +1,5 @@
 //store global variable
-var namesArray={};
+var namesArray=new Array();
 var cards={};
 var trackLength = 8;
 var sideLane = {};
@@ -28,6 +28,7 @@ function init()
   if (started) //if this is still set from last game we're the first to hit new game
     socket.emit('new');  //so tell the server!
   
+  curCard = 0;
   cards = {0:0, 1:0, 2:0, 3:0};
   for (var i = 0; i < trackLength; i++)
     sideLane[i] = "*";
@@ -42,8 +43,12 @@ function incrementCard(data)
   var suit = data["card"];
   cards[suit] += 1;
   renderBoard();
+  
+  //only need to see if this one card won since it was the only one that moved
   if (cards[suit] >= trackLength)
-    alert("winner: " + suits[suit]);
+    setTimeout(function(){
+      showResults(suit);
+    }, 1000);
 }
 
 //take the card and reveal it as the next card on the side, then decrement it's suit
@@ -54,6 +59,7 @@ function flipCard(data)
   curCard++;
   
   sideLane[trackLength-curCard] = suits[suit];
+  renderBoard();
   return;
 }
 
@@ -92,35 +98,18 @@ function receiveData(gameObject)
           break;
       }
       break;
-    case "players": //type: players, so update namesArray then call renderBoard
+     case "players": //type: players, so update namesArray then call renderBoard
       /* game object data, has all the names/positions */
-      namesArray = {};
-      //go through the data, deep copy to namesArray
-      //also checks for win condition while we're at it, and sets a flag accordingly
-      var winner = -1;
-      //document.getElementById("debugDiv").innerHTML = JSON.stringify(gameObject) + "<br>" + JSON.stringify(val);
-      for (var i = 0; i<Object.keys(val).length; i++)
-      {
-        namesArray[Object.keys(val)[i]] = val[Object.keys(val)[i]];
-        if (namesArray[Object.keys(namesArray)[i]] >= trackLength)
-          winner=i;
-        //if this client hasn't started but a piece moved, start.
-        if (!started && namesArray[Object.keys(namesArray)[i]] != 0)
-        {
-          started = true;
-          startGame();
-        }
-      }
+      namesArray = new Array();
+      // go through the data, deep copy to namesArray
+      // document.getElementById("debugDiv").innerHTML = JSON.stringify(gameObject) + "<br>" + JSON.stringify(val);
+      for (var i = 0; i<val.length; i++)
+        namesArray[i] = val[i];
       
-      //use the results appropriately
+      // use the results appropriately
       drawNames();
       renderBoard();
-      if (winner != -1)
-      {
-        setTimeout(function(){
-          showResults(winner);
-        }, 1000);
-      }
+      
       break;
     default:
       //TODO: ERROR HANDLING
@@ -174,8 +163,6 @@ function renderBoard(inputNamesArray)
   grid.innerHTML = "";
   
   //now construct our table
-  //for now hardcode it to be 8 rows and n columns
-    // Object.keys(cards).length is n
   //horse position determined by trackLength-m where m is value associated with player
   
   //set up some formatting on our table so it looks nice
@@ -239,6 +226,7 @@ function renderBoard(inputNamesArray)
   //put some blanks in so our float doesn't mess up the alignment
   sideTrack.innerHTML += "<tr><td style='color: white'>.</td></tr>";
   sideTrack.innerHTML += "<tr><td style='color: white'>.</td></tr>";
+  
   //return just in case there was more processing of results to be done  
   return;
 }
@@ -248,6 +236,7 @@ function renderBoard(inputNamesArray)
 function addName ()
 {
   var name = document.getElementById('nameInputBox');
+  var betChoice = document.getElementById('betChoice');
   var bet = document.getElementById('betInputBox');
   //check if we have too many players or if this player exists
   if (Object.keys(namesArray).length>=6)
@@ -266,12 +255,17 @@ function addName ()
   {
     //grab name from doc, send it to server
     
-    socket.emit('join',name.value, bet.value);
+    socket.emit('join',name.value, betChoice.value, bet.value);
     
     //updates local vars (REMOVE? since we use server data to update list now)
-    namesArray[name.value]=bet.value;
+    var newName = {};
+    newName["name"]=name.value;
+    newName["choice"]=betChoice.value;
+    newName["bet"]=bet.value;
+    namesArray.push(newName);
     name.value = "";
     bet.value = "";
+    betChoice.value = "Spades";
     drawNames();
   }
 }
@@ -288,8 +282,11 @@ function drawNames(inputNamesArray)
   //use namesArray to output list of all players in appropriate div
   var namesList = document.getElementById('namesList');
   namesList.innerHTML = "";
-  for (var i = 0; i<Object.keys(namesArray).length; i++) //for all players
-    namesList.innerHTML += "<li>" + Object.keys(namesArray)[i] + " - " + namesArray[Object.keys(namesArray)[i]] + "</li>";  
+  for (var i = 0; i<namesArray.length; i++) //for all players
+  {
+    var curElement = namesArray[i];
+    namesList.innerHTML += "<li>" + curElement["name"] + " - " + curElement["choice"] +" - " + curElement["bet"] + "</li>";  
+  }
 }
 
 // switch from player adding view to game view
@@ -327,8 +324,9 @@ function showResults(winnerVal)
   document.getElementById('game').classList.add("hidden");
   document.getElementById('results').classList.remove("hidden");
   document.getElementById('init').classList.add("hidden");
-  document.getElementById('players').classList.add("hidden");
+  document.getElementById('players').classList.remove("hidden");
   
   //show the winning player and set the an <a> tag with id for style
-  document.getElementById('winner').innerHTML = "Winner was: <a id='winningPlayer'>" + Object.keys(namesArray)[winnerVal] + "</a>";
+  var color = ((winnerVal%2==0) ? "black" : "red");
+  document.getElementById('winner').innerHTML = "Winner was: <a id='winningPlayer' class= '" + color + "'>" + suits[winnerVal] + "</a>";
 }

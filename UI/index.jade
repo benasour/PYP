@@ -12,10 +12,10 @@ html(lang="en")
     br
     label(for="betChoice") Choose your Suit: 
     select(id="betChoice")
-      option(value="spades") Spades
-      option(value="hearts") Hearts
-      option(value="clubs") Clubs
-      option(value="diamonds") Diamonds
+      option(value="Spades") Spades
+      option(value="Hearts") Hearts
+      option(value="Clubs") Clubs
+      option(value="Diamonds") Diamonds
     br
     label(for="betInputBox") Enter your Bet Amount: 
     input(type="text", id="betInputBox", onkeypress="if (event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;", onkeydown="if (event.keyCode==13) addName();")
