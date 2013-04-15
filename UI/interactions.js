@@ -86,10 +86,12 @@ function receiveData(gameObject)
       switch (val)
       {
         case "start":
+          cards = {0:0, 1:0, 2:0, 3:0};
           started=true; //sent from server so we don't need to tell it
           startGame();
           break;
         case "new":
+          cards = {0:0, 1:0, 2:0, 3:0};
           started = false; //stops from emitting once they're done viewing results
           break
         case "end": //not needed, but probably should do -- work on server, display on client
