@@ -3,19 +3,17 @@ var http = require('http');
 var socket = require('socket.io');
 var express = require('express');
 var jade = require('jade');
-var mongoose = require('mongoose')
 
 var app = express();
 var server = http.createServer(app);
 var io = socket.listen(server);
+var started = false;
+var clients = 0;
+var clientsWaiting = 0;
 
 //heroku suggestion to use port 8080
 var port = process.env.PORT || 8080;
 server.listen(port);
-
-//Models and db connection
-var Game = require('./Models/game');
-mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost/PYP');
 
 //configuration settings for express and socket.io
 //production environment only
@@ -40,11 +38,13 @@ app.get('/', function(req, res) {
 });
 
 app.get('/games', function(req, res) {
-  Game.find({}, 'name', function(err, games) {
-    if (!err) {
-      res.render('games', {games: games});
-    }
-  });
+  //TODO: Get list of games from mongo DB
+  var gamesList = new Array();
+  gamesList.push({name: "Horses"});
+  gamesList.push({name: "Card Horses"});
+  gamesList.push({name: "Another Drinking Game To Implement"});
+
+  res.render('games', {games: gamesList});
 });
 
 //look into using express.static
@@ -61,20 +61,32 @@ app.get('/interactions.js', function(req, res) {
 });
 
 var players = new Array();
-var started = false;
+
 io.sockets.on('connection', function (socket) {
   console.log('A new connection has been created');
   var toSend = {};
-  if (started) // if a game is in progress, tell this person!
+  if (started && clients > 0) // if a game is in progress, tell this person!
   {
     toSend["status"] = "started";
     socket.emit('sendStatus', toSend);
   }
+  clients++;
   toSend = {};
   toSend["players"] = players;
   console.log(toSend);
   socket.emit('playerListUpdate', toSend);
   socket.broadcast.emit('playerListUpdate', toSend);
+  
+  socket.on('disconnect', function(data) {
+    clients--;
+    console.log("disconnect, clients: " + clients);
+    if (clients == 0)
+    {
+      cards = {};
+      players = new Array();
+      started = false;
+    }
+  });
   
   socket.on('requestPlayers', function(){
     var toSend = {};
