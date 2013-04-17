@@ -9,6 +9,8 @@ var app = express();
 var server = http.createServer(app);
 var io = socket.listen(server);
 
+var horse = require('./horse/horse.js');
+
 //heroku suggestion to use port 8080
 var port = process.env.PORT || 8080;
 server.listen(port);
@@ -57,6 +59,7 @@ app.get('/horse', function(req, res) {
   gameChoice = '/horse/';
   app.set('views', __dirname + gameChoice + '/UI');
   res.render('index');
+  //horse.myFn(io);
 });
 
 
