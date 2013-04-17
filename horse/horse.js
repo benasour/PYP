@@ -1,18 +1,10 @@
-var express = require('express');
-var http = require('http');
 var socket = require('socket.io');
-
-var app = express();
-var server = http.createServer(app);
-var io = socket.listen(server);
-
 
 var players = new Array();
 var started = false;
 var clients = 0;
 var trackLength = 8;
-myFn = function(io) {
-  io.sockets.on('connection', function (socket) {
+myFn = function(socket) {
     console.log('A new connection has been created');
     var toSend = {};
     if (started && clients > 0) // if a game is in progress, tell this person!
@@ -152,7 +144,7 @@ myFn = function(io) {
       
       
     }); //end 'start game'
-  });
-}
+  };
 
-exports = myFn:
+
+exports.myFn = myFn;

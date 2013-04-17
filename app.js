@@ -75,3 +75,12 @@ app.get('/connections.js', function(req, res) {
 app.get('/interactions.js', function(req, res) {
   res.sendfile(__dirname + gameChoice + '/UI/interactions.js');
 });
+
+
+io.sockets.on('connection', function (socket) {
+  
+  horse.myFn(socket);
+
+});
+
+
