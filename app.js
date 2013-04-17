@@ -1,3 +1,10 @@
+/*  TODO: rename every signal to have a prefix of it's game
+    i.e: "horse-playerUpdate", "horse-boardUpdate", etc
+    This format allows every game to be contained in this
+    one file while we search for a better solution.
+*/
+
+
 var express = require('express');
 var http = require('http');
 var socket = require('socket.io');
@@ -36,6 +43,7 @@ app.set('view engine', 'jade');
 
 //controller routes
 app.get('/', function(req, res) {
+  app.set('views', __dirname + '/horse/UI');
   res.render('index');
 });
 
@@ -49,15 +57,15 @@ app.get('/games', function(req, res) {
 
 //look into using express.static
 app.get('/style.css', function(req, res) {
-  res.sendfile(__dirname + '/UI/style.css');
+  res.sendfile(__dirname + '/horse/UI/style.css');
 });
 
 app.get('/connections.js', function(req, res) {
-  res.sendfile(__dirname + '/UI/connections.js');
+  res.sendfile(__dirname + '/horse/UI/connections.js');
 });
 
 app.get('/interactions.js', function(req, res) {
-  res.sendfile(__dirname + '/UI/interactions.js');
+  res.sendfile(__dirname + '/horse/UI/interactions.js');
 });
 
 var players = new Array();
@@ -202,6 +210,13 @@ io.sockets.on('connection', function (socket) {
     socket.emit('partialBoardUpdate', {"cards":cards, "sideLane":sideLane});
     socket.broadcast.emit('partialBoardUpdate', {"cards":cards, "sideLane":sideLane});      
     
-    
   }); //end 'start game'
+  
+  socket.on('chatMsg', function (data) {
+    var msg = data["msg"];
+    
+    socket.emit('chatMsg', {"msg":msg});
+    socket.broadcast.emit('chatMsg', {"msg":msg});
+  });
+  
 });
