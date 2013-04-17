@@ -1,6 +1,9 @@
  var writeCounter=0;
  
- function resetWriteCounter(){ writeCounter=0; return;}
+ function resetWriteCounter(){ 
+  writeCounter=0; return;
+ }
+ 
  //socket functions for communication and event handling from the server
  //PRD
   var socketConnectionURL = "http://boiling-meadow-5174.herokuapp.com/";
@@ -11,51 +14,36 @@
   }
  var socket = io.connect(socketConnectionURL);
  
- socket.on('connect', function (data) {
-  //alert('client is connected');
+  socket.on('connect', function (data) {
+    //alert('client is connected');
   });
   
   socket.on('playerListUpdate', function (data) {
-  //alert('playerListUpdate');
-  
-  //document.getElementById("debugDiv").innerHTML = JSON.stringify(data);
-  receiveData(data);
+    //alert('playerListUpdate');
+    
+    //document.getElementById("debugDiv").innerHTML = JSON.stringify(data);
+    playerUpdate(data);
   });
   
+  //forward status related update to user
   socket.on('sendStatus', function (data) {
-  receiveData(data);
+    receiveStatus(data);
   });
   
-  socket.on('finalBoardUpdate', function (data) {
-  //debugDiv.innerHTML = JSON.stringify(data);
-  receiveData(data);
-  //renderBoard(data); // this isnt working, not sure why it doesnt draw the board correctly
-  //receiveData(JSON.stringify(data)); // nope doesnt work either
-  
-  });
-  
-  socket.on('partialBoardUpdate', function (data) {
-    writeCounter++;
+  //forward the server's game-related update to user
+  socket.on('partialBoardUpdate', function (data, flip) {
+    if (!flip) //don't increment if we're flipping so we can get a 1/4s delay
+      writeCounter++;
     myVar=setTimeout(function(){
-      //writeDebug(data);
-      //document.getElementById("debugDiv").innerHTML = JSON.stringify(data);
-      receiveData(data);
-    },writeCounter*1000);
+      receiveCards(data);
+    },writeCounter*1000+(flip ? 250:0));
   });
   
-  //these next two could go to receive data and have a case in the switch, but...
-  //call fn to advance the given suit one space
-  socket.on('incrementCard', function(data) {
+  //pass along the winner
+  socket.on('winner', function(data) {
     writeCounter++;
-    myVar=setTimeout(function(){
-      incrementCard(data);
+    myvar = setTimeout(function(){
+      showResults(data);
     },writeCounter*1000);
-  });
-  
-  //call fn to display this card and move the corresponding suit back one space
-  socket.on('flipCard', function(data) {
-      myVar=setTimeout(function(){
-      flipCard(data);
-    },(writeCounter)*1000+250);
   });
   

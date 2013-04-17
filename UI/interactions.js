@@ -1,10 +1,5 @@
 //store global variable
-var namesArray=new Array();
-var cards={};
 var trackLength = 8;
-var sideLane = {};
-var curCard = 0;
-var started=false;
 var suits={0:"\u2660", 1:"\u2665", 2:"\u2663", 3:"\u2666"};
 
 //function to print data (presumably from server) to a div on html page
@@ -24,105 +19,58 @@ function init()
   document.getElementById('players').classList.remove("hidden");
   resetWriteCounter();
 
-  //TODO: tell the server that we're starting a new round
-  if (started) //if this is still set from last game we're the first to hit new game
-    socket.emit('new');  //so tell the server!
-  
-  curCard = 0;
-  cards = {0:0, 1:0, 2:0, 3:0};
-  for (var i = 0; i < trackLength; i++)
-    sideLane[i] = "*";
-  started = false;
+  //tell the server we want to start
+  socket.emit('new'); 
+
+  //and ask for our init data to set up the board
   socket.emit('requestPlayers');
 }
 
-//card data format: {card: <0-3>}
-//take the card and increase value by 1
-function incrementCard(data)
+//process any event involving cards/card movement
+function receiveCards(data)
 {
-  var suit = data["card"];
-  cards[suit] += 1;
-  renderBoard();
+  var cards = data["cards"];
+  var sideLane = data["sideLane"];
   
-  //only need to see if this one card won since it was the only one that moved
-  if (cards[suit] >= trackLength)
-    setTimeout(function(){
-      showResults(suit);
-    }, 1000);
+  renderBoard(cards, sideLane);
 }
 
-//take the card and reveal it as the next card on the side, then decrement it's suit
-function flipCard(data)
+//process any status messages to/from the server
+function receiveStatus(data)
 {
-  var suit = data["card"];
-  cards[suit] -= 1;
-  curCard++;
-  
-  sideLane[trackLength-curCard] = suits[suit];
-  renderBoard();
-  return;
-}
-
-/*  takes in data from the server, processes it into namesArray, 
-  then calls render for the data to be used
-*/
-function receiveData(gameObject)
-{
-  //gameObject = JSON.parse(gameObject); //needed for fakeData, but not server apparently
-  
-  /*thinking a new format is in order!
-    {type: {data}}
-     {status: start}
-    {status: end, winner: ...? }
-      use winner:name, winner:index, or namesArray?
-    {names: {asdf:0, jkl: 1, qwerty: 6, ... } }
-  */
-  var type = Object.keys(gameObject)[0];
-  var val = gameObject[type];
-  
-  switch(type) //CONSIDER REFACTORING THIS SO EACH CASE JUST CALLS A METHOD
+  var val = data["status"];
+  switch (val)
   {
-    case "status":  /* game status message, tells if game started/ended/etc */
-      switch (val)
-      {
-        case "start":
-          cards = {0:0, 1:0, 2:0, 3:0};
-          started=true; //sent from server so we don't need to tell it
-          startGame();
-          break;
-        case "new":
-          document.getElementById("addButton").disabled = false;
-          document.getElementById("startButton").disabled = false;
-          cards = {0:0, 1:0, 2:0, 3:0};
-          started = false; //stops from emitting once they're done viewing results
-          break
-        case "started":
-          document.getElementById("addButton").disabled = true;
-          document.getElementById("startButton").disabled = true;
-          break;
-        case "end": //not needed, but probably should do -- work on server, display on client
-          
-          showResults();
-          break;
-      }
+    //TODO: REFACTOR: add started as parameter instead of global for startGame()
+    case "start":
+      startGame(); //this is where 'started' applies
       break;
-     case "players": //type: players, so update namesArray then call renderBoard
-      /* game object data, has all the names/positions */
-      namesArray = new Array();
-      // go through the data, deep copy to namesArray
-      // document.getElementById("debugDiv").innerHTML = JSON.stringify(gameObject) + "<br>" + JSON.stringify(val);
-      for (var i = 0; i<val.length; i++)
-        namesArray[i] = val[i];
-      
-      // use the results appropriately
-      drawNames();
-      renderBoard();
-      
+    case "new": //if we were out of the last game, allow us to participate this time!
+      document.getElementById("addButton").disabled = false;
+      document.getElementById("startButton").disabled = false;
+      break
+    case "started": //game in progress, so don't let this client participate
+      document.getElementById("addButton").disabled = true;
+      document.getElementById("startButton").disabled = true;
       break;
-    default:
-      //TODO: ERROR HANDLING
+    case "end": //not needed, but probably should do -- work on server, display on client
+      
+      showResults();
       break;
   }
+}
+
+//process any changes involving the list of players
+function playerUpdate(data)
+{
+  var val = data["players"];
+  var namesArray = new Array();
+  // go through the data, deep copy to namesArray
+  for (var i = 0; i<val.length; i++)
+    namesArray[i] = val[i];
+  
+  // use the results appropriately
+  drawNames(namesArray);
 }
 
 /*  simple function to deep copy our data, then increment one piece at 
@@ -150,29 +98,19 @@ function fakeData()
   }
   toSend["card"] = rnd;
   incrementCard(toSend);
-  
-  //receiveData(JSON.stringify(data));
 }
 
 /*  Prints out our game board to the appropriate div
-  Uses namesArray to determine where to place each player
+    Uses namesArray to determine where to place each player
     numbers used to represent them
 */
-function renderBoard(inputNamesArray)
+function renderBoard(cards, sideLane)
 {
-  //TEMPORARY NOTE: \u2660 - \u2667 TO GET CARD SUITS
-
-  //override for namesArray (TESTING ONLY)
-  if (inputNamesArray)
-  {
-    namesArray = inputNamesArray;
-  }
   var grid = document.getElementById('gameBoard');
   grid.innerHTML = "";
   
   //now construct our table
-  //horse position determined by trackLength-m where m is value associated with player
-  
+ 
   //set up some formatting on our table so it looks nice
   for (var i = 0; i < trackLength; i++)
     grid.innerHTML += "<col width= '30px'>";
@@ -194,7 +132,8 @@ function renderBoard(inputNamesArray)
     html = "";
     for (var j = 0; j < Object.keys(cards).length; j++) //for all players
     {
-      //if a player is in this cell, print their number and add class for styling
+      //if a horse is in this cell, print their number and add class for styling
+      //horse position determined by trackLength-i where i is position of horse
       if (cards[j] == trackLength-i)
       {
         html += "<td>";
@@ -225,12 +164,14 @@ function renderBoard(inputNamesArray)
   sideTrack = document.getElementById('sideTrackBody');
   sideTrack.innerHTML += "<tr><td style='color: white'>.</td></tr>";
   for (var i = 0; i < trackLength; i++)
-    if (sideLane[i] == "*")
-      sideTrack.innerHTML += "<tr><td>" + sideLane[i] + "</tr></td>";
-    else if (sideLane[i] == suits[0] || sideLane[i] == suits[2])
-      sideTrack.innerHTML += "<tr><td class='black'>" + sideLane[i] + "</tr></td>";
+  { //sideLane[i] contains the number specifying suit, or -1 for no suit
+    if (sideLane[i] == -1)
+      sideTrack.innerHTML += "<tr><td>*</tr></td>";
+    else if (sideLane[i] == 0 || sideLane[i] == 2)
+      sideTrack.innerHTML += "<tr><td class='black'>" + suits[sideLane[i]] + "</tr></td>";
     else
-      sideTrack.innerHTML += "<tr><td class='red'>" + sideLane[i] + "</tr></td>";
+      sideTrack.innerHTML += "<tr><td class='red'>" + suits[sideLane[i]] + "</tr></td>";
+  }
   //put some blanks in so our float doesn't mess up the alignment
   sideTrack.innerHTML += "<tr><td style='color: white'>.</td></tr>";
   sideTrack.innerHTML += "<tr><td style='color: white'>.</td></tr>";
@@ -247,46 +188,29 @@ function addName ()
   var betChoice = document.getElementById('betChoice');
   var bet = document.getElementById('betInputBox');
   //check if we have too many players or if this player exists
-  /*if (Object.keys(namesArray).length>=6)
-  {
-    alert("Sorry, this game has a max of 6 players.");
-  }*/
-  if (name.value in namesArray)
+  /*if (name.value in namesArray)
   {
     alert("Sorry, no duplicate names allowed.");
   }
-  else if (name.value.length<=0 || bet.value.length<=0)
+  else */if (name.value.length<=0 || bet.value.length<=0)
   {
     alert("Sorry, you must fill out both your name and your bet to proceed.");
   }
   else //if conditions for adding are met, upload it
   {
     //grab name from doc, send it to server
-    
     socket.emit('join',name.value, betChoice.value, bet.value);
     
-    //updates local vars (REMOVE? since we use server data to update list now)
-    var newName = {};
-    newName["name"]=name.value;
-    newName["choice"]=betChoice.value;
-    newName["bet"]=bet.value;
-    namesArray.push(newName);
+    //reset html objects to defaults for next entry
     name.value = "";
     bet.value = "";
     betChoice.value = "Spades";
-    drawNames();
   }
 }
 
 // outputs a list of player names with their corresponding numbers
-function drawNames(inputNamesArray)
-{
-  //overwrite namesArray with param (DEBUG ONLY)
-  if (inputNamesArray)
-  {
-    namesArray = inputNamesArray;
-  }
-  
+function drawNames(namesArray)
+{  
   //use namesArray to output list of all players in appropriate div
   var namesList = document.getElementById('namesList');
   namesList.innerHTML = "";
@@ -297,20 +221,16 @@ function drawNames(inputNamesArray)
   }
 }
 
+// tell the server we want to start the game
+function sendStart()
+{
+  socket.emit('startGame');
+}
+
 // switch from player adding view to game view
 function startGame()
 {
-  //tell the server we want to start!
-  if (!started){
-    // but make sure that the player isn't racing alone first
-    if (Object.keys(namesArray).length <=1)
-    {
-      alert("Need at least two players to play!");
-      exit;
-    }
-    socket.emit('startGame');
-  }
-  started=true; //just to be safe
+  //reset the delays on receives (how we get the game to go 1fps instead of instantly finishing)
   resetWriteCounter();
   
   //works in html5
@@ -319,15 +239,15 @@ function startGame()
   document.getElementById('results').classList.add("hidden");
   document.getElementById('players').classList.remove("hidden");
   
-  renderBoard();
-  //send list of all player objects to server
-  //alert(JSON.stringify(namesArray));
   return;
 }
 
 // switch from game view to results view (displays winner)
-function showResults(winnerVal)
+function showResults(data)
 {
+  var winnerVal = data["winner"];
+  console.log(winnerVal);
+
   //works in html5
   document.getElementById('game').classList.add("hidden");
   document.getElementById('results').classList.remove("hidden");

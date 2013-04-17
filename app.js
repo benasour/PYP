@@ -63,7 +63,7 @@ app.get('/interactions.js', function(req, res) {
 var players = new Array();
 var started = false;
 var clients = 0;
-var clientsWaiting = 0;
+var trackLength=8;
 io.sockets.on('connection', function (socket) {
   console.log('A new connection has been created');
   var toSend = {};
@@ -116,7 +116,7 @@ io.sockets.on('connection', function (socket) {
     //reset the players!
     players = new Array();
   
-    //tell other clients that a new game is starting
+    //tell other clients that a new game is being prepared
     var toSend = {};
     toSend["status"] = "new";  
     socket.emit('playerListUpdate', toSend);
@@ -136,52 +136,72 @@ io.sockets.on('connection', function (socket) {
     var status = {};
     status["status"] = "start";
     console.log(status);
+    socket.emit('sendStatus', status); 
     socket.broadcast.emit('sendStatus', status);  
-  
-    var trackLength = 8; //from index.html
   
     //this is where we loop
     var cards = {0:0, 1:0, 2:0, 3:0};
+    var sideLane = {};
+    for (var i = 0; i < trackLength; i++)
+      sideLane[i] = -1;
+    
+    //send initial states
+    socket.emit('partialBoardUpdate', {"cards":cards, "sideLane":sideLane});
+    socket.broadcast.emit('partialBoardUpdate', {"cards":cards, "sideLane":sideLane});      
     
     finished = false;
     var curSide = 1;
-    
+    var curCard;
     //loop through game operations untill full game sequence has been sent
     while (!finished)
     {
       var rnd = Math.floor(Math.random()*4);
       cards[Object.keys(cards)[rnd]]++;
-      
+      curCard=rnd;
       
       //tell client to increment this card
       console.log("incrementing: " + JSON.stringify({"card":rnd}));
-      socket.emit('incrementCard', {"card":rnd});
-      socket.broadcast.emit('incrementCard', {"card":rnd});  
+      socket.emit('partialBoardUpdate', {"cards":cards, "sideLane":sideLane});
+      socket.broadcast.emit('partialBoardUpdate', {"cards":cards, "sideLane":sideLane});      
       
       //check if every player passed the next line and flip a card if so
       var flip = true;
       for (var i = 0; i < Object.keys(cards).length; i++)
         if (cards[Object.keys(cards)[i]] < curSide)
           flip = false;
-      //someone crossed, so flip and decrement (and tell clients)
-      //someone crossed, so flip and decrement (and tell clients)
+      
+      //last horse crossed step, so flip a card and decrement (and tell clients)
       if (flip) 
       {
-        curSide++;
         var rnd2 = Math.floor(Math.random()*4);
-        cards[Object.keys(cards)[rnd2]]--;
+        sideLane[trackLength-curSide] = rnd2;
+        curSide++;
+        cards[Object.keys(cards)[rnd2]]--; //decrementing the appropriate horse to maintain position
         console.log("Flipping: " + JSON.stringify({"card":rnd2}));
-        socket.emit('flipCard', {"card":rnd2});
-        socket.broadcast.emit('flipCard', {"card":rnd2}); 
+        //boolean after data to tell that flip happened
+        socket.emit('partialBoardUpdate', {"cards":cards, "sideLane":sideLane}, true);
+        socket.broadcast.emit('partialBoardUpdate', {"cards":cards, "sideLane":sideLane}, true); 
       }
     
       //check for end game conditions
       for (var j = 0; j<Object.keys(cards).length; j++)
         if (cards[Object.keys(cards)[j]] >= trackLength)
           finished=true;
-      
-    }
+    } //end while
     
-  });
-  
+    //send winner (last card incremented)
+    console.log({"winner":curCard});
+    socket.emit('winner', {"winner":curCard});
+    socket.broadcast.emit('winner', {"winner":curCard}); 
+    
+    //reset everyone's board
+    var cards = {0:0, 1:0, 2:0, 3:0};
+    var sideLane = {};
+    for (var i = 0; i < trackLength; i++)
+      sideLane[i] = -1;
+    socket.emit('partialBoardUpdate', {"cards":cards, "sideLane":sideLane});
+    socket.broadcast.emit('partialBoardUpdate', {"cards":cards, "sideLane":sideLane});      
+    
+    
+  }); //end 'start game'
 });
