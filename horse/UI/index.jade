@@ -1,0 +1,42 @@
+doctype 5
+html(lang="en")
+  head
+  link(rel="stylesheet", href="/style.css")
+  script(src="/socket.io/socket.io.js")
+  script(src="/interactions.js")
+  script(src="/connections.js")
+  body
+  #init
+    label(for="nameInputBox") Enter your Name: 
+    input(type="text", id="nameInputBox", onkeydown="if (event.keyCode == 13) addName();")
+    br
+    label(for="betChoice") Choose your Suit: 
+    select(id="betChoice")
+      option(value="Spades") Spades
+      option(value="Hearts") Hearts
+      option(value="Clubs") Clubs
+      option(value="Diamonds") Diamonds
+    br
+    label(for="betInputBox") Enter your Bet Amount: 
+    input(type="text", id="betInputBox", onkeypress="if (event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;", onkeydown="if (event.keyCode==13) addName();")
+    
+    
+    br
+  
+    input(type="button", id="addButton", class="add", value="Add Name", onclick="addName()")
+    input(type="button", id="startButton", class="button", value="Start Game", onclick="sendStart()")
+  #game
+    #t1
+      table(id="gameBoard", border="0")
+    
+    table(id="sideTrack", border="0")
+  #results
+    p#winner
+    input(type="button", class="end", value="New Game", onClick="init();")
+    br
+    br
+  #players Players:
+    ol#namesList
+  div(id="debugDiv", style="border:2px")
+  script
+    init();
