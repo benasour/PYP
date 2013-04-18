@@ -144,6 +144,13 @@ game = function(socket) {
       
       
     }); //end 'start game'
+    
+    socket.on('chatMsg', function (data) {
+      var msg = data["msg"];
+      
+      socket.emit('chatMsg', {"msg":msg});
+      socket.broadcast.emit('chatMsg', {"msg":msg});
+    });
   };
 
 
