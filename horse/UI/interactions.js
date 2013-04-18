@@ -220,11 +220,13 @@ function drawNames(namesArray)
 {  
   //use namesArray to output list of all players in appropriate div
   var namesList = document.getElementById('namesList');
-  namesList.innerHTML = "";
+  namesList.innerHTML = "<tbody id='nameBody'></tbody>";
+  var nameTBody = document.getElementById('nameBody');
+  nameTBody.innerHTML = "<tr class='header'><td><b>Name</b></td><td><b>Suit</b></td><td><b>Bet</b></td></tr>";
   for (var i = 0; i<namesArray.length; i++) //for all players
   {
     var curElement = namesArray[i];
-    namesList.innerHTML += "<li>" + curElement["name"] + " - " + curElement["choice"] +" - " + curElement["bet"] + "</li>";  
+    nameTBody.innerHTML += "<tr><td>" + curElement["name"] + "</td><td>" + curElement["choice"] +"</td><td class='bet'>" + curElement["bet"] + "</td></tr>";  
   }
 }
 

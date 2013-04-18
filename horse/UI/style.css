@@ -7,7 +7,7 @@ td:nth-child(odd) .hasPlayer, .black{
 #winningPlayer {
   font-size: 1.75em;
 }
-table {
+#gameBoard, #sideTrack {
   font-size: 1.25em;
   border-collapse: collapse; /* 'cellspacing' equivalent */
   color: green;
@@ -23,7 +23,30 @@ table td, table th{
 .hidden {
   display: none;
 }
-
+.header {
+  text-align: center;
+}
+.bet {
+  text-align: right;
+}
+#namesList {
+  color:black;
+  font-size: 1em;
+  border: 1px solid black;
+  border-collapse:collapse;
+}
+#namesList td, #namesList th{
+  border: 1px solid black; /* 'cellpadding' equivalent */
+  
+}
+#namesList td {
+  padding: 4px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+#namesList tbody  tr:nth-child(2n+1){
+  background: #E5E5E5;
+}
 .button:hover{
   background: #44DD55;
 }
