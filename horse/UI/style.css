@@ -14,8 +14,26 @@
       background-color: #404040;
 } /* if both the vertical and the horizontal bars appear, then perhaps the right bottom corner also needs to be styled */
 body {
+  position: relative;
   background: #202020;
   color: #C0C0C0;
+}
+#chat{
+  position:absolute;
+  left: 400px;
+  top: 10px;
+}
+#chat table{
+  padding: 0;
+  border-collapse: collapse;
+}
+#chatNames{
+  width: 7em;
+}
+#players{
+  position: relative;
+  top: 1em;
+  width: 25em;
 }
 td:nth-child(even) .hasPlayer, .red{
   color: #FF0000;
