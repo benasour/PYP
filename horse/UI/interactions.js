@@ -220,13 +220,17 @@ function drawNames(namesArray)
 {  
   //use namesArray to output list of all players in appropriate div
   var namesList = document.getElementById('namesList');
+  var chatNames = document.getElementById('chatNames');
   namesList.innerHTML = "<tbody id='nameBody'></tbody>";
   var nameTBody = document.getElementById('nameBody');
   nameTBody.innerHTML = "<tr id='header'><td><b>Name</b></td><td><b>Suit</b></td><td><b>Bet</b></td></tr>";
+  chatNames.options.length = 0;
+ 
   for (var i = 0; i<namesArray.length; i++) //for all players
   {
     var curElement = namesArray[i];
     nameTBody.innerHTML += "<tr><td>" + curElement["name"] + "</td><td>" + curElement["choice"] +"</td><td class='bet'>" + curElement["bet"] + "</td></tr>";  
+    chatNames.add(new Option(curElement["name"]));
   }
 }
 

@@ -38,9 +38,15 @@ html(lang="en")
   #players Players:
     table(id="namesList")
   #chat
-    textArea(id="chatBox", rows='6', cols='40', readonly=true)
-    br
-    input(type="text", id="chatMsg", size='52', onkeydown="if (event.keyCode==13) sendMsg();");
+    table
+      tr
+        td(rowspan=2)
+          select(id="chatNames", multiple="multiple", size="8")
+        td
+          textArea(id="chatBox", rows='6', cols='40', readonly=true)
+      tr
+        td
+          input(type="text", id="chatMsg", size='52', onkeydown="if (event.keyCode==13) sendMsg();");
   div(id="debugDiv", style="border:2px")
   script
     init();
