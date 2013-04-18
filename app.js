@@ -16,7 +16,9 @@ var app = express();
 var server = http.createServer(app);
 var io = socket.listen(server);
 
+//ADD YOUR GAME HERE
 var horse = require('./horse/horse.js');
+var coin = require('./coin/coin.js');
 
 //heroku suggestion to use port 8080
 var port = process.env.PORT || 8080;
@@ -25,6 +27,11 @@ server.listen(port);
 //Models and db connection
 var Game = require('./Models/game');
 mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost/PYP');
+
+//temp games list for testing (use DB later)
+var gameList = new Array();
+gameList.push({"name":"coin"});
+gameList.push({"name":"horse"});
 
 var gameChoice;
 
@@ -47,11 +54,13 @@ app.set('view engine', 'jade');
 
 //controller routes
 app.get('/', function(req, res) {
-  app.set('views', __dirname + '/horse/UI');
-  res.render('index');
+  app.set('views', __dirname + '/UI');
+  console.log(JSON.stringify({games: gameList}));
+  res.render('games', {games: gameList} );
 });
 
 app.get('/games', function(req, res) {
+  app.set('views', __dirname + '/UI');
   Game.find({}, function(err, games) {
     if (!err) {
       res.render('games', {games: games});
@@ -59,29 +68,40 @@ app.get('/games', function(req, res) {
   });
 });
 
+//ADD YOUR GAME EXTENTION HERE!
+
 app.get('/horse', function(req, res) {
   gameChoice = '/horse/';
-  app.set('views', __dirname + gameChoice + '/UI');
+  app.set('views', __dirname + '/horse/UI');
+  res.render('index');
+});
+
+app.get('/coin', function(req, res) {
+  gameChoice = '/coin/';
+  app.set('views', __dirname + '/coin/UI');
   res.render('index');
 });
 
 
 //look into using express.static
 app.get('/style.css', function(req, res) {
-  res.sendfile(__dirname + '/horse/UI/style.css');
+  res.sendfile(__dirname + gameChoice + 'UI/style.css');
 });
 
 app.get('/connections.js', function(req, res) {
-  res.sendfile(__dirname + '/horse/UI/connections.js');
+  res.sendfile(__dirname + gameChoice + 'UI/connections.js');
 });
 
 app.get('/interactions.js', function(req, res) {
-  res.sendfile(__dirname + '/horse/UI/interactions.js');
+  res.sendfile(__dirname + gameChoice + 'UI/interactions.js');
 });
 
-
+//ADD YOUR GAME HERE AS WELL
+//connect to game
+//THIS SWITCH SHOULD ONLY BE HERE IF WE'RE NOT PREPENDING GAME NAME IN ALL SOCKET SIGNALS
 io.sockets.on('connection', function (socket) {
   horse.game(socket);
+  coin.game(socket);
 });
 
 

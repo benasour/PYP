@@ -1,7 +1,7 @@
- var writeCounter=-1;
+ var writeCounter=0;
  
  function resetWriteCounter(){ 
-  writeCounter=-1; return;
+  writeCounter=0; return;
  }
  
  //socket functions for communication and event handling from the server
@@ -14,22 +14,22 @@
   }
  var socket = io.connect(socketConnectionURL);
  
-  socket.on('horse-connect', function (data) {
+  socket.on('coin-connect', function (data) {
     //alert('client is connected');
   });
   
-  socket.on('horse-playerListUpdate', function (data) {
+  socket.on('coin-playerListUpdate', function (data) {
     //document.getElementById("debugDiv").innerHTML = JSON.stringify(data);
     playerUpdate(data);
   });
   
   //forward status related update to user
-  socket.on('horse-sendStatus', function (data) {
+  socket.on('coin-sendStatus', function (data) {
     receiveStatus(data);
   });
   
   //forward the server's game-related update to user
-  socket.on('horse-partialBoardUpdate', function (data, flip) {
+  socket.on('coin-partialBoardUpdate', function (data, flip) {
     if (!flip) //don't increment if we're flipping so we can get a 1/4s delay
       writeCounter++;
     myVar=setTimeout(function(){
@@ -38,14 +38,14 @@
   });
   
   //pass along the winner
-  socket.on('horse-winner', function(data) {
+  socket.on('coin-winner', function(data) {
     writeCounter++;
     myvar = setTimeout(function(){
       showResults(data);
     },writeCounter*1000);
   });
   
-  socket.on('horse-chatMsg', function(data) {
+  socket.on('coin-chatMsg', function(data) {
     receiveMsg(data);
   });
   

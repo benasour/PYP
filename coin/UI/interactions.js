@@ -21,10 +21,10 @@ function init()
   resetWriteCounter();
 
   //tell the server we want to start
-  socket.emit('horse-new'); 
+  socket.emit('coin-new'); 
 
   //and ask for our init data to set up the board
-  socket.emit('horse-requestPlayers');
+  socket.emit('coin-requestPlayers');
 }
 
 //process any event involving cards/card movement
@@ -203,7 +203,7 @@ function addName ()
   else //if conditions for adding are met, upload it
   {
     //grab name from doc, send it to server
-    socket.emit('horse-join',name.value, betChoice.value, bet.value);
+    socket.emit('coin-join',name.value, betChoice.value, bet.value);
     
     //save the name for chat
     myName = name.value;
@@ -231,7 +231,7 @@ function drawNames(namesArray)
 // tell the server we want to start the game
 function sendStart()
 {
-  socket.emit('horse-startGame');
+  socket.emit('coin-startGame');
 }
 
 // switch from player adding view to game view
@@ -273,7 +273,7 @@ function sendMsg()
   var msg = chatOut.value;
   chatOut.value = "";
   
-  socket.emit('horse-chatMsg', {"msg":myName + ": " + msg});
+  socket.emit('coin-chatMsg', {"msg":myName + ": " + msg});
 }
 
 // received message, so take data and display it to user
