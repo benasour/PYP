@@ -23,9 +23,6 @@ table td, table th{
 .hidden {
   display: none;
 }
-.header {
-  text-align: center;
-}
 .bet {
   text-align: right;
 }
@@ -46,6 +43,10 @@ table td, table th{
 }
 #namesList tbody  tr:nth-child(2n+1){
   background: #E5E5E5;
+}
+#namesList tbody  tr:nth-child(1){
+  background: #C0C0C0;
+  text-align: center;
 }
 .button:hover{
   background: #44DD55;

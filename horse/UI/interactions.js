@@ -222,7 +222,7 @@ function drawNames(namesArray)
   var namesList = document.getElementById('namesList');
   namesList.innerHTML = "<tbody id='nameBody'></tbody>";
   var nameTBody = document.getElementById('nameBody');
-  nameTBody.innerHTML = "<tr class='header'><td><b>Name</b></td><td><b>Suit</b></td><td><b>Bet</b></td></tr>";
+  nameTBody.innerHTML = "<tr id='header'><td><b>Name</b></td><td><b>Suit</b></td><td><b>Bet</b></td></tr>";
   for (var i = 0; i<namesArray.length; i++) //for all players
   {
     var curElement = namesArray[i];
