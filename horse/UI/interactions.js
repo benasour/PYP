@@ -166,7 +166,7 @@ function renderBoard(cards, sideLane)
   var sideTrack = document.getElementById("sideTrack");
   sideTrack.innerHTML = "<tbody id='sideTrackBody'></tbody>";
   sideTrack = document.getElementById('sideTrackBody');
-  sideTrack.innerHTML += "<tr><td style='color: white'>.</td></tr>";
+  sideTrack.innerHTML += "<tr><td class='back'>.</td></tr>";
   for (var i = 0; i < trackLength; i++)
   { //sideLane[i] contains the number specifying suit, or -1 for no suit
     if (sideLane[i] == -1)
@@ -177,8 +177,8 @@ function renderBoard(cards, sideLane)
       sideTrack.innerHTML += "<tr><td class='red'>" + suits[sideLane[i]] + "</tr></td>";
   }
   //put some blanks in so our float doesn't mess up the alignment
-  sideTrack.innerHTML += "<tr><td style='color: white'>.</td></tr>";
-  sideTrack.innerHTML += "<tr><td style='color: white'>.</td></tr>";
+  sideTrack.innerHTML += "<tr><td class='back'>.</td></tr>";
+  sideTrack.innerHTML += "<tr><td class='back'>.</td></tr>";
   
   //return just in case there was more processing of results to be done  
   return;
@@ -274,7 +274,7 @@ function showResults(data)
 
 // send message to server so other players can see it
 function sendMsg()
-{ //chatMsg, chatBox
+{ 
   var chatOut = document.getElementById('chatMsg');
   var msg = chatOut.value;
   chatOut.value = "";
