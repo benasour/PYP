@@ -1,3 +1,20 @@
+::-webkit-scrollbar-button:horizontal:decrement {
+  background-image: url(scrollbar/horizontal-decrement-arrow.png);
+  background-position: 4px 3px; }
+ 
+::-webkit-scrollbar-button:horizontal:increment {
+  background-image: url(scrollbar/horizontal-increment-arrow.png);
+  background-position: 3px 3px; }
+ 
+::-webkit-scrollbar-button:vertical:decrement {
+  background-image: url(scrollbar/vertical-decrement-arrow.png);
+  background-position: 3px 4px; }
+ 
+::-webkit-scrollbar-button:vertical:increment {
+  background-image: url(/vertical-increment-arrow.png);
+}
+
+
 ::-webkit-scrollbar  {
   width: 15px;
 }
@@ -8,7 +25,7 @@
       background-color: #141414;
 } /* this will style the thumb, ignoring the track */
 ::-webkit-scrollbar-button {
-      background-color: #202040;//#203058;
+      background-color: #202040;
 } /* optionally, you can style the top and the bottom buttons (left and right for horizontal bars) */
 ::-webkit-scrollbar-corner {
       background-color: #181820;
@@ -38,6 +55,7 @@ body {
 #chatBox {
   position:relative;
   top: -1px;
+  resize: none;
 }
 #chatMsg {
   position:relative;
