@@ -8,7 +8,6 @@
 var express = require('express');
 var http = require('http');
 var socket = require('socket.io');
-var express = require('express');
 var jade = require('jade');
 var mongoose = require('mongoose');
 
@@ -84,8 +83,10 @@ app.get('/coin', function(req, res) {
 
 
 //look into using express.static
+app.use(express.static(__dirname + '/Assets'));
 app.get('/style.css', function(req, res) {
-  res.sendfile(__dirname + gameChoice + 'UI/style.css');
+  //res.sendfile(__dirname + gameChoice + 'UI/style.css');
+  res.sendfile(__dirname + '/horse/UI/style.css');
 });
 
 app.get('/connections.js', function(req, res) {
