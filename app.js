@@ -50,6 +50,7 @@ app.configure('development', function() {
 //all environments
 app.set('views', __dirname + '/UI');
 app.set('view engine', 'jade');
+app.use(express.bodyParser());
 
 //controller routes
 app.get('/', function(req, res) {
@@ -73,6 +74,11 @@ app.get('/horse', function(req, res) {
   gameChoice = '/horse/';
   app.set('views', __dirname + '/horse/UI');
   res.render('index');
+});
+
+app.post('/horseform', function(req, res) {
+  horse.joinGame(req.body.name, req.body.suit, req.body.bet);
+  res.redirect('/horse');
 });
 
 app.get('/coin', function(req, res) {

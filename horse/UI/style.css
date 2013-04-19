@@ -1,7 +1,7 @@
-td:nth-child(even) .hasPlayer, .red{
+td:nth-child(even) .hasPlayer, .red {
   color:red;
 }
-td:nth-child(odd) .hasPlayer, .black{
+td:nth-child(odd) .hasPlayer, .black {
   color:black;
 }
 #winningPlayer {
@@ -12,11 +12,11 @@ table {
   border-collapse: collapse; /* 'cellspacing' equivalent */
   color: green;
 }
-#t1{ float: left; }
+#t1 { float: left; }
 #sideTrack {
   vertical-align:middle;
 }
-table td, table th{
+table td, table th {
   text-align:bottom;
   padding: 0; /* 'cellpadding' equivalent */
 }
@@ -24,24 +24,23 @@ table td, table th{
   display: none;
 }
 
-.button:hover{
+.button:hover {
   background: #44DD55;
 }
-.button:active{
+.button:active {
   background: #10B630;
 }
 
-.add:hover{
+.add:hover {
    background: #77BBFF;
 }
-.add:active{
+.add:active {
   background: #6195FF;
 }
 
-.end:hover{
+.end:hover {
   background: #FF4F4F;
 }
-.end:active{
+.end:active {
   background: #EE3333;
 }
-

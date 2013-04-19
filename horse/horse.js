@@ -54,7 +54,7 @@ game = function(socket) {
     console.log('I am the new game function!');
       started = false;
       //reset the players!
-      players = new Array();
+      //players = new Array();
     
       //tell other clients that a new game is being prepared
       var toSend = {};
@@ -153,5 +153,8 @@ game = function(socket) {
     });
   };
 
-
 exports.game = game;
+
+exports.joinGame = function(name, suit, bet) {
+  players.push({name: name, choice: suit, bet: bet});
+}

@@ -2,8 +2,42 @@ doctype 5
 html(lang="en")
   head
     title Games
+    link(rel="stylesheet", href="style.css")
+    link(rel="stylesheet", href="Stylesheets/JQuery/jquery.ui.all.css")
+    link(rel="stylesheet", href="Stylesheets/site.css")
+    script(src="Libs/jquery-1.9.1.min.js")
+    script(src="Libs/jquery.ui.core.min.js")
+    script(src="Libs/jquery.ui.widget.min.js")
+    script(src="Libs/jquery.ui.button.min.js")
+    script(src="Libs/jquery.ui.position.min.js")
+    script(src="Libs/jquery.ui.dialog.min.js")
+    script(src="Javascript/gameslist.js")
   body
+    nav
+      ul
+        li
+          a( href="#") Home
+        li
+          a(href="#") Games
     ul
       each game in games
         li
-          a(href="/"+game.name) #{game.name}
+          //a(href="/"+game.name) #{game.name}
+          a(class="game", href="#") #{game.name}
+    #forms.hidden
+      form(id="horseform", method="post", action="/horseform")
+        label(for="name") Enter Your Name:
+        input(type="text", name="name", id="name")
+
+        label(for="suit") Choose Your Suit:
+        select(name="suit", id="suit")
+          option(value="Spades") Spades
+          option(value="Hearts") Hearts
+          option(value="Clubs") Clubs
+          option(value="Diamonds") Diamonds
+
+        label(for="bet") Enter Your Bet Amount:
+        input(name="bet", id="bet")
+
+        input(type="submit", value="Join")
+
