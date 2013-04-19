@@ -1,18 +1,99 @@
+::-webkit-scrollbar-button:horizontal:decrement {
+  background-image: url(scrollbar/horizontal-decrement-arrow.png);
+  background-position: 4px 3px;
+}
+ 
+::-webkit-scrollbar-button:horizontal:increment {
+  background-image: url(scrollbar/horizontal-increment-arrow.png);
+  background-position: 3px 3px;
+}
+ 
+::-webkit-scrollbar-button:vertical:decrement {
+  background-image: url(scrollbar/vertical-decrement-arrow.png);
+  background-position: 3px 4px;
+}
+ 
+::-webkit-scrollbar-button:vertical:increment {
+  background-image: url(/vertical-increment-arrow.png);
+}
+
+
+::-webkit-scrollbar  {
+  width: 15px;
+}
+::-webkit-scrollbar-track {
+      background-color: #343434;
+} /* the new scrollbar will have a flat appearance with the set background color */
+::-webkit-scrollbar-thumb {
+      background-color: #141414;
+} /* this will style the thumb, ignoring the track */
+::-webkit-scrollbar-button {
+      background-color: #202040;
+} /* optionally, you can style the top and the bottom buttons (left and right for horizontal bars) */
+::-webkit-scrollbar-corner {
+      background-color: #181820;
+} /* if both the vertical and the horizontal bars appear, then perhaps the right bottom corner also needs to be styled */
+body {
+  position: relative;
+  background: #202020;
+  color: #C0C0C0;
+}
+#chat {
+  position:absolute;
+  left: 400px;
+  top: 10px;
+}
+#chat table {
+  padding: 0;
+  border-collapse: collapse;
+  border-spacing: 0;
+  border: 0px;
+  margin: 0px;
+}
+#chat td, #chat th {
+  padding: 0px;
+  margin: 0px;
+  border: 0px;
+}
+#chatBox {
+  position:relative;
+  top: -1px;
+  resize: none;
+}
+#chatMsg {
+  position:relative;
+  top: -5px;
+}
+#chatNames {
+  position:relative;
+  width: 7em;
+  top: -3px;
+}
+#players {
+  position: relative;
+  top: 1em;
+  width: 25em;
+}
 td:nth-child(even) .hasPlayer, .red {
-  color:red;
+  color: #FF0000;
 }
 td:nth-child(odd) .hasPlayer, .black {
-  color:black;
+  color:#0000FF;
 }
 #winningPlayer {
   font-size: 1.75em;
 }
-table {
+#gameBoard, #sideTrack {
   font-size: 1.25em;
   border-collapse: collapse; /* 'cellspacing' equivalent */
   color: green;
 }
-#t1 { float: left; }
+.back { /*for the hidden cells in sideBoard*/
+  color: #202020;
+}
+#t1 { 
+  float: left; 
+}
 #sideTrack {
   vertical-align:middle;
 }
@@ -23,24 +104,65 @@ table td, table th {
 .hidden {
   display: none;
 }
+.bet {
+  text-align: right;
+}
+#namesList {
+  color:#BBBBBB;
+  font-size: 1em;
+  border: 1px solid black;
+  border-collapse:collapse;
+}
+#namesList td, #namesList th {
+  border: 1px solid black; /* 'cellpadding' equivalent */
+}
+#namesList td {
+  padding: 4px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+#namesList tbody  tr:nth-child(2n+1) {
+  background: #414141;
+}
+#namesList tbody  tr:nth-child(1) {
+  background: #5A5A5A;
+  text-align: center;
+  color: #CCCCCC;
+}
+
+select {
+  background: #414141;
+  color: #C4C4C4;
+  border: 0px;
+}
+textarea {
+  background: #414141;
+  color: #C4C4C4;
+  border: 0px;
+}
+input {
+  background: #414141;
+  color: #C4C4C4;
+  border: 0px;
+}
 
 .button:hover {
-  background: #44DD55;
+  background: #108038;
 }
 .button:active {
-  background: #10B630;
+  background: #087030;
 }
 
-.add:hover {
-   background: #77BBFF;
+.add:hover { 
+   background: #103880;
 }
 .add:active {
-  background: #6195FF;
+  background: #083070;
 }
 
 .end:hover {
-  background: #FF4F4F;
+  background: #601018;
 }
 .end:active {
-  background: #EE3333;
+  background: #4C0810;
 }

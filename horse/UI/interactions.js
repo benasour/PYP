@@ -166,7 +166,7 @@ function renderBoard(cards, sideLane)
   var sideTrack = document.getElementById("sideTrack");
   sideTrack.innerHTML = "<tbody id='sideTrackBody'></tbody>";
   sideTrack = document.getElementById('sideTrackBody');
-  sideTrack.innerHTML += "<tr><td style='color: white'>.</td></tr>";
+  sideTrack.innerHTML += "<tr><td class='back'>.</td></tr>";
   for (var i = 0; i < trackLength; i++)
   { //sideLane[i] contains the number specifying suit, or -1 for no suit
     if (sideLane[i] == -1)
@@ -177,8 +177,8 @@ function renderBoard(cards, sideLane)
       sideTrack.innerHTML += "<tr><td class='red'>" + suits[sideLane[i]] + "</tr></td>";
   }
   //put some blanks in so our float doesn't mess up the alignment
-  sideTrack.innerHTML += "<tr><td style='color: white'>.</td></tr>";
-  sideTrack.innerHTML += "<tr><td style='color: white'>.</td></tr>";
+  sideTrack.innerHTML += "<tr><td class='back'>.</td></tr>";
+  sideTrack.innerHTML += "<tr><td class='back'>.</td></tr>";
   
   //return just in case there was more processing of results to be done  
   return;
@@ -220,11 +220,17 @@ function drawNames(namesArray)
 {  
   //use namesArray to output list of all players in appropriate div
   var namesList = document.getElementById('namesList');
-  namesList.innerHTML = "";
+  var chatNames = document.getElementById('chatNames');
+  namesList.innerHTML = "<tbody id='nameBody'></tbody>";
+  var nameTBody = document.getElementById('nameBody');
+  nameTBody.innerHTML = "<tr id='header'><td><b>Name</b></td><td><b>Suit</b></td><td><b>Bet</b></td></tr>";
+  chatNames.options.length = 0;
+ 
   for (var i = 0; i<namesArray.length; i++) //for all players
   {
     var curElement = namesArray[i];
-    namesList.innerHTML += "<li>" + curElement["name"] + " - " + curElement["choice"] +" - " + curElement["bet"] + "</li>";  
+    nameTBody.innerHTML += "<tr><td>" + curElement["name"] + "</td><td>" + curElement["choice"] +"</td><td class='bet'>" + curElement["bet"] + "</td></tr>";  
+    chatNames.add(new Option(curElement["name"]));
   }
 }
 
@@ -268,7 +274,7 @@ function showResults(data)
 
 // send message to server so other players can see it
 function sendMsg()
-{ //chatMsg, chatBox
+{ 
   var chatOut = document.getElementById('chatMsg');
   var msg = chatOut.value;
   chatOut.value = "";
