@@ -1,11 +1,14 @@
 var socket = require('socket.io');
 
-var curRoom = 1;
+var curRoom = 0;
+
+//TODO: make these public vars into arrays so that we have instances for each room
 var players = new Array();
-var lastPlayer = {};
+var lastPlayer = {}; //needed since joinGame happens before connection (bulk of code)
 var started = false;
 var clients = 0;
 var trackLength = 8;
+
 game = function(socket, io) {
     console.log('A new connection has been created'); 
     var toSend = {};
@@ -20,8 +23,6 @@ game = function(socket, io) {
       curRoom++;
       socket.join('horse-' + curRoom);
       socket.emit('horse-room' + curRoom);
-      //toSend["status"] = "started";
-      //socket.emit('horse-sendStatus', toSend);
     }
     socket.join('horse-' + curRoom);
     socket.emit('horse-room', curRoom);
@@ -60,24 +61,6 @@ game = function(socket, io) {
       players.push({"name":name, "choice":choice, "bet":bet});
       //wrap in another layer to format it as a type for interactions.js
       var toSend = {};
-      toSend["players"] = players;
-      console.log(toSend);
-      io.sockets.in('horse-'+curRoom).emit('horse-playerListUpdate', toSend);
-    });
-    
-    socket.on('horse-new', function () {
-    console.log('I am the new game function!');
-      started = false;
-      //reset the players!
-      //players = new Array();
-    
-      //tell other clients that a new game is being prepared
-      var toSend = {};
-      toSend["status"] = "new";  
-      io.sockets.in('horse-'+curRoom).emit('horse-playerListUpdate', toSend);
-    
-      //reset everyone's player lists
-      toSend = {};
       toSend["players"] = players;
       console.log(toSend);
       io.sockets.in('horse-'+curRoom).emit('horse-playerListUpdate', toSend);
@@ -130,7 +113,7 @@ game = function(socket, io) {
           console.log("Flipping: " + JSON.stringify({"card":rnd2}));
           //boolean after data to tell that flip happened
           io.sockets.in('horse-'+curRoom).emit('horse-partialBoardUpdate', {"cards":cards, "sideLane":sideLane}, true);
-          }
+        }
       
         //check for end game conditions
         for (var j = 0; j<Object.keys(cards).length; j++)
@@ -148,15 +131,11 @@ game = function(socket, io) {
       for (var i = 0; i < trackLength; i++)
         sideLane[i] = -1;
       io.sockets.in('horse-'+curRoom).emit('horse-partialBoardUpdate', {"cards":cards, "sideLane":sideLane});
-      
-      
+     
     }); //end 'start game'
     
     socket.on('horse-chatMsg', function (data) {
       var msg = data["msg"];
-      //var rooms = io.sockets.manager.roomClients[socket.id];
-      //var room = Object.keys(rooms)[1];
-      //room = room.substring(1, room.length);
       var room = data["room"];
       io.sockets.in(room).emit('horse-chatMsg', {"msg":msg});
     });

@@ -1,8 +1,8 @@
 //store global variable
 var trackLength = 8;
-var suits={0:"\u2660", 1:"\u2665", 2:"\u2663", 3:"\u2666"};
-var myName;
-var myRoom;
+var suits={0:"\u2660", 1:"\u2665", 2:"\u2663", 3:"\u2666"}; //unicode for suits
+var myName; //to prepend on chat messages
+var myRoom; //to give as a param with chat messages (to tell who to send to)
 
 //function to print data (presumably from server) to a div on html page
 function writeDebug(data)
