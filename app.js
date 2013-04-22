@@ -70,15 +70,15 @@ app.get('/games', function(req, res) {
 
 //ADD YOUR GAME EXTENTION HERE!
 
-app.get('/horse', function(req, res) {
+app.get('/horse/:name', function(req, res) {
   gameChoice = '/horse/';
   app.set('views', __dirname + '/horse/UI');
-  res.render('index');
+  res.render('index', {"name": req.params.name});
 });
 
 app.post('/horseform', function(req, res) {
   horse.joinGame(req.body.name, req.body.suit, req.body.bet);
-  res.redirect('/horse');
+  res.redirect('/horse/'+req.body.name);
 });
 
 app.get('/coin', function(req, res) {

@@ -14,6 +14,7 @@ function writeDebug(data)
 //init function sets up the inital layout of the page and get our variables started
 function init()
 {
+  myName = document.getElementById('name').value;
   document.getElementById('init').classList.remove("hidden");
   document.getElementById('game').classList.add("hidden");
   document.getElementById('results').classList.add("hidden");
