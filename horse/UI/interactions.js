@@ -38,31 +38,6 @@ function receiveCards(data)
   renderBoard(cards, sideLane);
 }
 
-//process any status messages to/from the server
-function receiveStatus(data)
-{
-  var val = data["status"];
-  switch (val)
-  {
-    //TODO: REFACTOR: add started as parameter instead of global for startGame()
-    case "start":
-      startGame(); //this is where 'started' applies
-      break;
-    case "new": //if we were out of the last game, allow us to participate this time!
-      document.getElementById("addButton").disabled = false;
-      document.getElementById("startButton").disabled = false;
-      break
-    case "started": //game in progress, so don't let this client participate
-      document.getElementById("addButton").disabled = true;
-      document.getElementById("startButton").disabled = true;
-      break;
-    case "end": //not needed, but probably should do -- work on server, display on client
-      
-      showResults();
-      break;
-  }
-}
-
 //process any changes involving the list of players
 function playerUpdate(data)
 {
@@ -184,37 +159,6 @@ function renderBoard(cards, sideLane)
   
   //return just in case there was more processing of results to be done  
   return;
-}
-
-// Take a submitted name and add it to our data/init the player
-// now the namesArray number portion will contain the bet instead of position
-function addName ()
-{
-  var name = document.getElementById('nameInputBox');
-  var betChoice = document.getElementById('betChoice');
-  var bet = document.getElementById('betInputBox');
-  //check if we have too many players or if this player exists
-  /*if (name.value in namesArray)
-  {
-    alert("Sorry, no duplicate names allowed.");
-  }
-  else */if (name.value.length<=0 || bet.value.length<=0)
-  {
-    alert("Sorry, you must fill out both your name and your bet to proceed.");
-  }
-  else //if conditions for adding are met, upload it
-  {
-    //grab name from doc, send it to server
-    socket.emit('horse-join',name.value, betChoice.value, bet.value);
-    
-    //save the name for chat
-    myName = name.value;
-    
-    //reset html objects to defaults for next entry
-    name.value = "";
-    bet.value = "";
-    betChoice.value = "Spades";
-  }
 }
 
 // outputs a list of player names with their corresponding numbers

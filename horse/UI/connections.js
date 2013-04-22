@@ -28,8 +28,8 @@
   });
   
   //forward status related update to user
-  socket.on('horse-sendStatus', function (data) {
-    receiveStatus(data);
+  socket.on('horse-start', function (data) {
+    startGame();
   });
   
   //forward the server's game-related update to user

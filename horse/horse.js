@@ -72,7 +72,7 @@ game = function(socket, io) {
       var status = {};
       status["status"] = "start";
       console.log(status);
-      io.sockets.in('horse-'+curRoom).emit('horse-sendStatus', status); 
+      io.sockets.in('horse-'+curRoom).emit('horse-start', status); 
     
       //this is where we loop
       var cards = {0:0, 1:0, 2:0, 3:0};
@@ -125,13 +125,6 @@ game = function(socket, io) {
       console.log({"winner":curCard});
       io.sockets.in('horse-'+curRoom).emit('horse-winner', {"winner":curCard});
       
-      //reset everyone's board
-      var cards = {0:0, 1:0, 2:0, 3:0};
-      var sideLane = {};
-      for (var i = 0; i < trackLength; i++)
-        sideLane[i] = -1;
-      io.sockets.in('horse-'+curRoom).emit('horse-partialBoardUpdate', {"cards":cards, "sideLane":sideLane});
-     
     }); //end 'start game'
     
     socket.on('horse-chatMsg', function (data) {
