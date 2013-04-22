@@ -30,10 +30,9 @@
   
   //forward the server's game-related update to user
   socket.on('coin-partialBoardUpdate', function (data, flip) {
-    if (!flip) //don't increment if we're flipping so we can get a 1/4s delay
-      writeCounter++;
+    writeCounter++;
     myVar=setTimeout(function(){
-      receiveCards(data);
+      receiveCoin(data);
     },writeCounter*1000+(flip ? 250:0));
   });
   
