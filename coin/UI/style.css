@@ -1,7 +1,4 @@
-td:nth-child(even) .hasPlayer, .red{
-  color:red;
-}
-td:nth-child(odd) .hasPlayer, .black{
+td .hasPlayer .black{
   color:black;
 }
 #winningPlayer {
