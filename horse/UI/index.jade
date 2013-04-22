@@ -14,7 +14,7 @@ html(lang="en")
       table(id="sideTrack", border="0")
     #results
       p#winner
-      input(type="button", class="end", value="New Game", onClick="init();")
+      input(type="button", class="end", value="Leave Game", onClick="leaveGame();")
       br
       br
     #chat
@@ -30,5 +30,6 @@ html(lang="en")
     #players Players:
       table(id="namesList")
     div(id="debugDiv", style="border:2px")
+    input(type='hidden', id='name', value=name)
     script
       init();

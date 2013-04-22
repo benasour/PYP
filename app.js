@@ -70,15 +70,15 @@ app.get('/games', function(req, res) {
 
 //ADD YOUR GAME EXTENTION HERE!
 
-app.get('/horse', function(req, res) {
+app.get('/horse/:name', function(req, res) {
   gameChoice = '/horse/';
   app.set('views', __dirname + '/horse/UI');
-  res.render('index');
+  res.render('index', {"name": req.params.name});
 });
 
 app.post('/horseform', function(req, res) {
   horse.joinGame(req.body.name, req.body.suit, req.body.bet);
-  res.redirect('/horse');
+  res.redirect('/horse/'+req.body.name);
 });
 
 app.get('/coin', function(req, res) {
@@ -112,8 +112,8 @@ app.get('/interactions.js', function(req, res) {
 //connect to game
 //THIS SWITCH SHOULD ONLY BE HERE IF WE'RE NOT PREPENDING GAME NAME IN ALL SOCKET SIGNALS
 io.sockets.on('connection', function (socket) {
-  horse.game(socket);
-  coin.game(socket);
+  horse.game(socket, io);
+  coin.game(socket, io);
 });
 
 
