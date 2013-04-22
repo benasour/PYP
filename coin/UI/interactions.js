@@ -1,6 +1,6 @@
 //store global variable
-var trackLength = 8;
-var suits={0:"\u2660", 1:"\u2665", 2:"\u2663", 3:"\u2666"};
+var gameLength = 1;
+var side={0:"H", 1:"T"};
 var myName;
 
 //function to print data (presumably from server) to a div on html page
@@ -27,13 +27,12 @@ function init()
   socket.emit('coin-requestPlayers');
 }
 
-//process any event involving cards/card movement
-function receiveCards(data)
+//process any event involving coin/card movement
+function receiveCoin(data)
 {
-  var cards = data["cards"];
-  var sideLane = data["sideLane"];
+  var coin = data["coin"];
   
-  renderBoard(cards, sideLane);
+  renderBoard(coin);
 }
 
 //process any status messages to/from the server
@@ -83,32 +82,22 @@ function playerUpdate(data)
 function fakeData()
 {
   var data = {};
-  for (var i = 0; i<4; i++)
-    data[i] = cards[i];
-  var rnd = Math.floor(Math.random()*4);
+  for (var i = 0; i<2; i++)
+    data[i] = coin[i];
+  var rnd = Math.floor(Math.random()*2);
   data[Object.keys(data)[rnd]]++;
   
   var toSend = {};
   
-  var flip = true;
-  for (var i = 0; i < 4; i++)
-    if (data[i] < curCard+1)
-      flip=false;
-  if (flip)
-  {
-    var rnd2 = Math.floor(Math.random()*4);
-    toSend["card"] = rnd2;
-    flipCard(toSend);
-  }
-  toSend["card"] = rnd;
-  incrementCard(toSend);
+  toSend["side"] = rnd;
+  incrementCoin(toSend);
 }
 
 /*  Prints out our game board to the appropriate div
     Uses namesArray to determine where to place each player
     numbers used to represent them
 */
-function renderBoard(cards, sideLane)
+function renderBoard(coin)
 {
   var grid = document.getElementById('gameBoard');
   grid.innerHTML = "";
@@ -116,32 +105,31 @@ function renderBoard(cards, sideLane)
   //now construct our table
  
   //set up some formatting on our table so it looks nice
-  for (var i = 0; i < trackLength; i++)
+  for (var i = 0; i < gameLength; i++)
     grid.innerHTML += "<col width= '30px'>";
   grid.innerHTML += "<tbody id='tableBody'></tbody>";
   var gridTest = document.getElementById("tableBody");
   var html = "";
   
   //merge cells in top row and print out finish line of appropriate length
-  html += "<tr><td class='border' colspan='" + Object.keys(cards).length + "'>";
-  for( var k = 0; k < Object.keys(cards).length ; k++)
-    html += "------";
+  html += "<tr><td class='border' colspan='" + Object.keys(coin).length + "'>";
+  html += "-------";
   html += "</td></tr>";
   
   //now the bulk of the work -- print out the grid and player locations
   gridTest.innerHTML += html;  
-  for (var i = 0; i <= trackLength; i++) //for tracklength
+  for (var i = 0; i <= gameLength; i++) //for gameLength
   {
     gridTest.innerHTML += "<tr>";
     html = "";
-    for (var j = 0; j < Object.keys(cards).length; j++) //for all players
+    for (var j = 0; j < Object.keys(coin).length; j++) //for all players
     {
-      //if a horse is in this cell, print their number and add class for styling
-      //horse position determined by trackLength-i where i is position of horse
-      if (cards[j] == trackLength-i)
+      //if a coin is in this cell, print the corresponding letter and add class for styling
+      //coin position determined by gameLength-i where i is position of coin
+      if (coin[j] == gameLength-i)
       {
         html += "<td>";
-        html +=  "|  <a class='hasPlayer'>" + suits[j] + "</a>|" ;
+        html +=  "|  <a class='hasPlayer'>" + side[j] + "</a>|" ;
       }
       else //no player, so just a cell with a placeholder dot
       {
@@ -155,30 +143,10 @@ function renderBoard(cards, sideLane)
   
   //merge cells in bottom row and print out bottom border line of appropriate length
   html = "";
-  html += "<tr><td class='border' colspan='" + Object.keys(cards).length + "'>";
-  for( var k = 0; k < Object.keys(cards).length ; k++)
-    html += "------";
+  html += "<tr><td class='border' colspan='" + Object.keys(coin).length + "'>";
+  html += "-------";
   html += "</td></tr>";
   gridTest.innerHTML += html; 
-    
-  
-  //do the sidetrack in a separate table for simplicity's sake
-  var sideTrack = document.getElementById("sideTrack");
-  sideTrack.innerHTML = "<tbody id='sideTrackBody'></tbody>";
-  sideTrack = document.getElementById('sideTrackBody');
-  sideTrack.innerHTML += "<tr><td style='color: white'>.</td></tr>";
-  for (var i = 0; i < trackLength; i++)
-  { //sideLane[i] contains the number specifying suit, or -1 for no suit
-    if (sideLane[i] == -1)
-      sideTrack.innerHTML += "<tr><td>*</tr></td>";
-    else if (sideLane[i] == 0 || sideLane[i] == 2)
-      sideTrack.innerHTML += "<tr><td class='black'>" + suits[sideLane[i]] + "</tr></td>";
-    else
-      sideTrack.innerHTML += "<tr><td class='red'>" + suits[sideLane[i]] + "</tr></td>";
-  }
-  //put some blanks in so our float doesn't mess up the alignment
-  sideTrack.innerHTML += "<tr><td style='color: white'>.</td></tr>";
-  sideTrack.innerHTML += "<tr><td style='color: white'>.</td></tr>";
   
   //return just in case there was more processing of results to be done  
   return;
@@ -211,7 +179,7 @@ function addName ()
     //reset html objects to defaults for next entry
     name.value = "";
     bet.value = "";
-    betChoice.value = "Spades";
+    betChoice.value = "Heads";
   }
 }
 
@@ -220,11 +188,17 @@ function drawNames(namesArray)
 {  
   //use namesArray to output list of all players in appropriate div
   var namesList = document.getElementById('namesList');
-  namesList.innerHTML = "";
-  for (var i = 0; i<namesArray.length; i++) //for all players
+  var chatNames = document.getElementById('chatNames');
+  namesList.innerHTML = "<tbody id='nameBody'></tbody>";
+  var nameTBody = document.getElementById('nameBody');
+  nameTBody.innerHTML = "<tr id='header'><td><b>Name</b></td><td><b>Suit</b></td><td><b>Bet</b></td></tr>";
+  chatNames.options.length = 0;
+  
+  for (var i = 0; i < namesArray.length; i++) //for all players
   {
     var curElement = namesArray[i];
-    namesList.innerHTML += "<li>" + curElement["name"] + " - " + curElement["choice"] +" - " + curElement["bet"] + "</li>";  
+    nameTBody.innerHTML += "<tr><td>" + curElement["name"] + "</td><td>" + curElement["choice"] +"</td><td class='bet'>" + curElement["bet"] + "</td></tr>";  
+    chatNames.add(new Option(curElement["name"]));
   }
 }
 
@@ -263,7 +237,7 @@ function showResults(data)
   
   //show the winning player and set the an <a> tag with id for style
   var color = ((winnerVal%2==0) ? "black" : "red");
-  document.getElementById('winner').innerHTML = "Winner was: <a id='winningPlayer' class= '" + color + "'>" + suits[winnerVal] + "</a>";
+  document.getElementById('winner').innerHTML = "Winner was: <a id='winningPlayer' class= '" + color + "'>" + side[winnerVal] + "</a>";
 }
 
 // send message to server so other players can see it

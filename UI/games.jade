@@ -40,4 +40,18 @@ html(lang="en")
         input(name="bet", id="bet")
 
         input(type="submit", value="Join")
+        
+      form(id="coinform", method="post", action="/coinform")
+        label(for="name") Enter Your Name:
+        input(type="text", name="name", id="name")
+
+        label(for="suit") Choose Your Side:
+        select(name="side", id="side")
+          option(value="Heads") Heads
+          option(value="Tails") Tails
+
+        label(for="bet") Enter Your Bet Amount:
+        input(name="bet", id="bet")
+
+        input(type="submit", value="Join")
 

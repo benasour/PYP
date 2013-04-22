@@ -87,6 +87,11 @@ app.get('/coin', function(req, res) {
   res.render('index');
 });
 
+app.post('/coinform', function(req, res) {
+  coin.joinGame(req.body.name, req.body.side, req.body.bet);
+  res.redirect('/coin');
+});
+
 
 //look into using express.static
 app.use(express.static(__dirname + '/Assets'));
