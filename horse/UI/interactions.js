@@ -2,6 +2,7 @@
 var trackLength = 8;
 var suits={0:"\u2660", 1:"\u2665", 2:"\u2663", 3:"\u2666"};
 var myName;
+var myRoom;
 
 //function to print data (presumably from server) to a div on html page
 function writeDebug(data)
@@ -280,15 +281,31 @@ function sendMsg()
   var msg = chatOut.value;
   chatOut.value = "";
   
-  socket.emit('horse-chatMsg', {"msg":myName + ": " + msg});
+  socket.emit('horse-chatMsg', {"msg":myName + ": " + msg, "room":myRoom});
 }
 
 // received message, so take data and display it to user
 function receiveMsg(data)
-{ // \n\r? is newline
+{
   msg = data["msg"];
   var chatBox = document.getElementById('chatBox');
   
   chatBox.value += msg + "\n";
   chatBox.scrollTop = chatBox.scrollHeight; //set to bottom of chatbox
 }
+
+function joinRoom(data)
+{
+  myRoom = data;
+}
+
+// tell the server we left, then leave the game room, and redirect to home
+function leaveGame(data)
+{
+    
+    socket.emit('horse-leave', myName);
+    document.location = "..";
+}
+
+
+

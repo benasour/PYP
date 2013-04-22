@@ -18,6 +18,10 @@
     //alert('client is connected');
   });
   
+  socket.on('horse-room', function(roomNumber) {
+    joinRoom('horse-' + roomNumber);
+  });
+  
   socket.on('horse-playerListUpdate', function (data) {
     //document.getElementById("debugDiv").innerHTML = JSON.stringify(data);
     playerUpdate(data);

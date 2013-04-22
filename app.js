@@ -107,8 +107,8 @@ app.get('/interactions.js', function(req, res) {
 //connect to game
 //THIS SWITCH SHOULD ONLY BE HERE IF WE'RE NOT PREPENDING GAME NAME IN ALL SOCKET SIGNALS
 io.sockets.on('connection', function (socket) {
-  horse.game(socket);
-  coin.game(socket);
+  horse.game(socket, io);
+  coin.game(socket, io);
 });
 
 
