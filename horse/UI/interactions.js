@@ -22,11 +22,8 @@ function init()
   document.getElementById('players').classList.remove("hidden");
   resetWriteCounter();
 
-  //tell the server we want to start
-  socket.emit('horse-new'); 
-
   //and ask for our init data to set up the board
-  socket.emit('horse-requestPlayers');
+  requestPlayers();
 }
 
 //process any event involving cards/card movement
@@ -180,10 +177,20 @@ function drawNames(namesArray)
   }
 }
 
+function drawChatNames(names)
+{
+  var chatNames = document.getElementById('chatNames');
+  chatNames.options.length = 0;
+  for (var i = 0; i<names.length; i++) //for all players
+  {
+    chatNames.add(new Option(names[i]));
+  }
+}
+
 // tell the server we want to start the game
 function sendStart()
 {
-  socket.emit('horse-startGame');
+  requestStart();
 }
 
 // switch from player adding view to game view
@@ -225,7 +232,8 @@ function sendMsg()
   var msg = chatOut.value;
   chatOut.value = "";
   
-  socket.emit('horse-chatMsg', {"msg":myName + ": " + msg, "room":myRoom});
+  var data = {"msg":myName + ": " + msg, "room":myRoom};
+  sendChat(data);
 }
 
 // received message, so take data and display it to user
@@ -238,16 +246,15 @@ function receiveMsg(data)
   chatBox.scrollTop = chatBox.scrollHeight; //set to bottom of chatbox
 }
 
-function joinRoom(data)
+function joinRoom(room)
 {
-  myRoom = data;
+  myRoom = room;
 }
 
 // tell the server we left, then leave the game room, and redirect to home
-function leaveGame(data)
+function leaveGame()
 {
-    
-    socket.emit('horse-leave', myName);
+    sendLeave();
     document.location = "..";
 }
 

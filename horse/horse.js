@@ -8,9 +8,11 @@ var lastPlayer = {}; //needed since joinGame happens before connection (bulk of 
 var started = false;
 var clients = 0;
 var trackLength = 8;
+var idsToNames = {};
 
 game = function(socket, io) {
     console.log('A new connection has been created'); 
+    idsToNames[socket.id] = lastPlayer.name;
     var toSend = {};
     if (started && clients > 0) // if a game is in progress, tell this person!
     {
@@ -21,11 +23,9 @@ game = function(socket, io) {
       clients = 0;
       started = false;
       curRoom++;
-      socket.join('horse-' + curRoom);
-      socket.emit('horse-room' + curRoom);
     }
     socket.join('horse-' + curRoom);
-    socket.emit('horse-room', curRoom);
+    socket.emit('horse-room', {"room":curRoom});
     clients++;
     toSend = {};
     toSend["players"] = players;
@@ -37,6 +37,7 @@ game = function(socket, io) {
       console.log("disconnect, clients: " + clients);
       if (clients == 0)
       {
+        curRoom = 0;
         cards = {};
         players = new Array();
         started = false;
@@ -45,7 +46,31 @@ game = function(socket, io) {
     
     socket.on('horse-leave', function(data) {
       //leave the room it was in (not sure how to do this since we change the rooms)
-      ;
+      //get clients to remove them from the chatting list
+      
+      var rooms = io.sockets.manager.roomClients[socket.id];
+      idsToNames[socket.id] = "";
+      for (room in rooms)
+      {
+        if (room != '/ ' && room != '')
+        {
+          room = room.substring(1, room.length); //get rid of the '/'
+          socket.leave(room);
+          var clients = io.sockets.clients(room);
+            
+          var names = new Array();
+          for (var i = 0; i< clients.length; i++)
+          {
+            if (idsToNames[clients[i].id] != "")
+            {
+              //console.log("pushing: " + idsToNames[clients[i].id]);
+              names.push(idsToNames[clients[i].id]);
+            }
+          }
+          var toSend = {"names": names};
+          io.sockets.in(room).emit('horse-chatNameUpdate', toSend);
+        }
+      }
     });
     
     socket.on('horse-requestPlayers', function(){

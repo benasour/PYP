@@ -4,6 +4,22 @@
   writeCounter=-1; return;
  }
  
+ function requestPlayers(){
+  socket.emit('horse-requestPlayers');
+ }
+ 
+ function requestStart(){
+  socket.emit('horse-startGame');
+ }
+ 
+ function sendChat(data){
+  socket.emit('horse-chatMsg', data);
+ }
+ 
+ function sendLeave(){
+  socket.emit('horse-leave', myName);
+ }
+ 
  //socket functions for communication and event handling from the server
  //PRD
   var socketConnectionURL = "http://boiling-meadow-5174.herokuapp.com/";
@@ -18,8 +34,12 @@
     //alert('client is connected');
   });
   
-  socket.on('horse-room', function(roomNumber) {
-    joinRoom('horse-' + roomNumber);
+  socket.on('horse-room', function(data) {
+    joinRoom('horse-' + data["room"]);
+  });
+  
+  socket.on('horse-chatNameUpdate', function(data) {
+    drawChatNames(data["names"]);
   });
   
   socket.on('horse-playerListUpdate', function (data) {
