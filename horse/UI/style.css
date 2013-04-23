@@ -1,18 +1,19 @@
-::-webkit-scrollbar  {
+/*::-webkit-scrollbar  {
   width: 15px;
 }
 ::-webkit-scrollbar-track {
       background-color: #343434;
 } /* the new scrollbar will have a flat appearance with the set background color */
-::-webkit-scrollbar-thumb {
+/*::-webkit-scrollbar-thumb {
       background-color: #141414;
 } /* this will style the thumb, ignoring the track */
-::-webkit-scrollbar-button {
+/*::-webkit-scrollbar-button {
       background-color: #202040;
 } /* optionally, you can style the top and the bottom buttons (left and right for horizontal bars) */
-::-webkit-scrollbar-corner {
+/*::-webkit-scrollbar-corner {
       background-color: #181820;
 } /* if both the vertical and the horizontal bars appear, then perhaps the right bottom corner also needs to be styled */
+
 body {
   position: relative;
   background: #202020;
@@ -20,7 +21,7 @@ body {
 }
 #chat {
   position:absolute;
-  left: 400px;
+  left: 250px;
   top: 10px;
 }
 #chat table {
@@ -28,7 +29,7 @@ body {
   border-collapse: collapse;
   border-spacing: 0;
   border: 0px;
-  margin: 0px;
+  margin: 2px;
 }
 #chat td, #chat th {
   padding: 0px;
@@ -37,12 +38,11 @@ body {
 }
 #chatBox {
   position:relative;
-  top: -1px;
   resize: none;
 }
 #chatMsg {
   position:relative;
-  top: -5px;
+  top: -2px;
 }
 #chatNames {
   position:relative;
@@ -52,7 +52,7 @@ body {
 #players {
   position: relative;
   top: 1em;
-  width: 25em;
+  width: 15em;
 }
 td:nth-child(even) .hasPlayer, .red {
   color: #FF0000;
@@ -114,16 +114,19 @@ select {
   background: #414141;
   color: #C4C4C4;
   border: 0px;
+  margin: 2px;
 }
 textarea {
   background: #414141;
   color: #C4C4C4;
   border: 0px;
+  margin: 2px;
 }
 input {
   background: #414141;
   color: #C4C4C4;
   border: 0px;
+  margin: 2px;
 }
 
 .button:hover {
