@@ -42,6 +42,12 @@ io.configure('production', function () {
   io.enable('browser client minification');
 });
 
+io.configure('test', function () {
+  io.set("transports", ["xhr-polling"]); 
+  io.set("polling duration", 10);
+  io.enable('browser client minification');
+});
+
 //development  environment only
 app.configure('development', function() {
   app.locals.pretty = true;
