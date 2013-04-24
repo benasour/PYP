@@ -20,15 +20,8 @@
   socket.emit('horse-leave', myName);
  }
  
- //socket functions for communication and event handling from the server
- //PRD
-  var socketConnectionURL = "http://boiling-meadow-5174.herokuapp.com/";
-  if (window.location.toString().indexOf("localhost")>=0)
-  {
-    //localhost
-    socketConnectionURL ="http://localhost:8080";
-  }
- var socket = io.connect(socketConnectionURL);
+ //socket function for communication and event handling from the server
+ var socket = io.connect();
  
   socket.on('horse-connect', function (data) {
     //alert('client is connected');
