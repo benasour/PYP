@@ -1,7 +1,8 @@
 //store global variable
 var gameLength = 1;
 var side={0:"H", 1:"T"};
-var myName;
+var myName; //to prepend on chat messages
+var myRoom; //to give as a param with chat messages (to tell who to send to)
 
 //function to print data (presumably from server) to a div on html page
 function writeDebug(data)
@@ -14,17 +15,15 @@ function writeDebug(data)
 //init function sets up the inital layout of the page and get our variables started
 function init()
 {
+  myName = document.getElementById('name').value;
   document.getElementById('init').classList.remove("hidden");
   document.getElementById('game').classList.add("hidden");
   document.getElementById('results').classList.add("hidden");
   document.getElementById('players').classList.remove("hidden");
   resetWriteCounter();
 
-  //tell the server we want to start
-  socket.emit('coin-new'); 
-
   //and ask for our init data to set up the board
-  socket.emit('coin-requestPlayers');
+  requestPlayers();
 }
 
 //process any event involving coin/card movement
@@ -33,31 +32,6 @@ function receiveCoin(data)
   var coin = data["coin"];
   
   renderBoard(coin);
-}
-
-//process any status messages to/from the server
-function receiveStatus(data)
-{
-  var val = data["status"];
-  switch (val)
-  {
-    //TODO: REFACTOR: add started as parameter instead of global for startGame()
-    case "start":
-      startGame(); //this is where 'started' applies
-      break;
-    case "new": //if we were out of the last game, allow us to participate this time!
-      document.getElementById("addButton").disabled = false;
-      document.getElementById("startButton").disabled = false;
-      break
-    case "started": //game in progress, so don't let this client participate
-      document.getElementById("addButton").disabled = true;
-      document.getElementById("startButton").disabled = true;
-      break;
-    case "end": //not needed, but probably should do -- work on server, display on client
-      
-      showResults();
-      break;
-  }
 }
 
 //process any changes involving the list of players
@@ -152,46 +126,15 @@ function renderBoard(coin)
   return;
 }
 
-// Take a submitted name and add it to our data/init the player
-// now the namesArray number portion will contain the bet instead of position
-function addName ()
-{
-  var name = document.getElementById('nameInputBox');
-  var betChoice = document.getElementById('betChoice');
-  var bet = document.getElementById('betInputBox');
-  //check if we have too many players or if this player exists
-  /*if (name.value in namesArray)
-  {
-    alert("Sorry, no duplicate names allowed.");
-  }
-  else */if (name.value.length<=0 || bet.value.length<=0)
-  {
-    alert("Sorry, you must fill out both your name and your bet to proceed.");
-  }
-  else //if conditions for adding are met, upload it
-  {
-    //grab name from doc, send it to server
-    socket.emit('coin-join',name.value, betChoice.value, bet.value);
-    
-    //save the name for chat
-    myName = name.value;
-    
-    //reset html objects to defaults for next entry
-    name.value = "";
-    bet.value = "";
-    betChoice.value = "Heads";
-  }
-}
-
 // outputs a list of player names with their corresponding numbers
 function drawNames(namesArray)
-{  
+{
   //use namesArray to output list of all players in appropriate div
   var namesList = document.getElementById('namesList');
   var chatNames = document.getElementById('chatNames');
   namesList.innerHTML = "<tbody id='nameBody'></tbody>";
   var nameTBody = document.getElementById('nameBody');
-  nameTBody.innerHTML = "<tr id='header'><td><b>Name</b></td><td><b>Suit</b></td><td><b>Bet</b></td></tr>";
+  nameTBody.innerHTML = "<tr id='header'><td><b>Name</b></td><td><b>Side</b></td><td><b>Bet</b></td></tr>";
   chatNames.options.length = 0;
   
   for (var i = 0; i < namesArray.length; i++) //for all players
@@ -202,10 +145,20 @@ function drawNames(namesArray)
   }
 }
 
+function drawChatNames(names)
+{
+  var chatNames = document.getElementById('chatNames');
+  chatNames.options.length = 0;
+  for (var i = 0; i<names.length; i++) //for all players
+  {
+    chatNames.add(new Option(names[i]));
+  }
+}
+
 // tell the server we want to start the game
 function sendStart()
 {
-  socket.emit('coin-startGame');
+  requestStart();
 }
 
 // switch from player adding view to game view
@@ -242,20 +195,34 @@ function showResults(data)
 
 // send message to server so other players can see it
 function sendMsg()
-{ //chatMsg, chatBox
+{
   var chatOut = document.getElementById('chatMsg');
   var msg = chatOut.value;
   chatOut.value = "";
   
-  socket.emit('coin-chatMsg', {"msg":myName + ": " + msg});
+  var data = {"msg":myName + ": " + msg, "room":myRoom};
+  sendChat(data);
 }
 
 // received message, so take data and display it to user
 function receiveMsg(data)
-{ // \n\r? is newline
+{
   msg = data["msg"];
   var chatBox = document.getElementById('chatBox');
   
   chatBox.value += msg + "\n";
+  console.log("receive msg: " + chatBox.value)
   chatBox.scrollTop = chatBox.scrollHeight; //set to bottom of chatbox
+}
+
+function joinRoom(room)
+{
+  myRoom = room;
+}
+
+// tell the server we left, then leave the game room, and redirect to home
+function leaveGame()
+{
+  sendLeave();
+    document.location = "..";
 }

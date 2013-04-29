@@ -87,15 +87,15 @@ app.post('/horseform', function(req, res) {
   res.redirect('/horse/'+req.body.name);
 });
 
-app.get('/coin', function(req, res) {
+app.get('/coin/:name', function(req, res) {
   gameChoice = '/coin/';
   app.set('views', __dirname + '/coin/UI');
-  res.render('index');
+  res.render('index', {"name": req.params.name});
 });
 
 app.post('/coinform', function(req, res) {
   coin.joinGame(req.body.name, req.body.side, req.body.bet);
-  res.redirect('/coin');
+  res.redirect('/coin/'+req.body.name);
 });
 
 

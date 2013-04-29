@@ -1,21 +1,38 @@
- var writeCounter=0;
+ var writeCounter = -1;
  
  function resetWriteCounter(){ 
-  writeCounter=0; return;
+  writeCounter=-1; return;
  }
  
- //socket functions for communication and event handling from the server
- //PRD
-  var socketConnectionURL = "http://boiling-meadow-5174.herokuapp.com/";
-  if (window.location.toString().indexOf("localhost")>=0)
-  {
-    //localhost
-    socketConnectionURL ="http://localhost:8080";
-  }
- var socket = io.connect(socketConnectionURL);
+ function requestPlayers(){
+  socket.emit('coin-requestPlayers');
+ }
+ 
+ function requestStart(){
+  socket.emit('coin-startGame');
+ }
+ 
+ function sendChat(data){
+  socket.emit('coin-chatMsg', data);
+ }
+ 
+ function sendLeave(){
+  socket.emit('coin-leave', myName);
+ }
+ 
+ //socket function for communication and event handling from the server
+ var socket = io.connect();
  
   socket.on('coin-connect', function (data) {
     //alert('client is connected');
+  });
+  
+  socket.on('coin-room', function(data) {
+    joinRoom('coin-' + data["room"]);
+  });
+  
+  socket.on('coin-chatNameUpdate', function(data) {
+    drawChatNames(data["names"]);
   });
   
   socket.on('coin-playerListUpdate', function (data) {
@@ -24,16 +41,16 @@
   });
   
   //forward status related update to user
-  socket.on('coin-sendStatus', function (data) {
-    receiveStatus(data);
+  socket.on('coin-start', function (data) {
+    startGame();
   });
   
   //forward the server's game-related update to user
-  socket.on('coin-partialBoardUpdate', function (data, flip) {
+  socket.on('coin-partialBoardUpdate', function (data) {
     writeCounter++;
     myVar=setTimeout(function(){
       receiveCoin(data);
-    },writeCounter*1000+(flip ? 250:0));
+    },writeCounter*1000);
   });
   
   //pass along the winner
