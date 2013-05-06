@@ -1,4 +1,5 @@
 var socket = require('socket.io');
+var request = require('request');
 
 var curRoom = 0;
 
@@ -128,6 +129,18 @@ game = function(socket, io) {
       //send winner (last card incremented)
       console.log({"winner":curFlip});
       io.sockets.in('coin-'+curRoom).emit('coin-winner', {"winner":curFlip});
+
+      // Change each player's bet to negative if they didn't guess right and
+      // call rest service to save results on PYP Profile App
+      for (var i = 0; i < players.length; i++) {
+        var player = players[i];
+        if (choiceToInt(player.choice) != curFlip) {
+          player.bet = -player.bet;
+        }
+
+        var pypBaseUrl = process.env.PYP_BASE_URL || "http://localhost:62438/";
+        request.post(pypBaseUrl + 'api/history', {form: {GameName: "Coin", UserName: player.name, Score: player.bet}});
+      }
     });
     
     socket.on('coin-chatMsg', function (data) {
@@ -143,4 +156,8 @@ exports.game = game;
 exports.joinGame = function(name, side, bet) {
 lastPlayer = {name: name, choice: side, bet: bet}
   players.push(lastPlayer);
+}
+
+function choiceToInt(sideChoice) {
+  return sideChoice == "Heads" ? 0 : 1;
 }

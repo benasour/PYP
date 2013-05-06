@@ -4,7 +4,6 @@
     one file while we search for a better solution.
 */
 
-
 var express = require('express');
 var http = require('http');
 var socket = require('socket.io');
@@ -79,7 +78,9 @@ app.get('/games', function(req, res) {
 app.get('/horse/:name', function(req, res) {
   gameChoice = '/horse/';
   app.set('views', __dirname + '/horse/UI');
-  res.render('index', {"name": req.params.name});
+  var pypBaseUrl = process.env.PYP_BASE_URL || "http://localhost:62438/";
+
+  res.render('index', {"name": req.params.name, "pypBaseUrl": pypBaseUrl});
 });
 
 app.post('/horseform', function(req, res) {
@@ -90,7 +91,9 @@ app.post('/horseform', function(req, res) {
 app.get('/coin/:name', function(req, res) {
   gameChoice = '/coin/';
   app.set('views', __dirname + '/coin/UI');
-  res.render('index', {"name": req.params.name});
+  var pypBaseUrl = process.env.PYP_BASE_URL || "http://localhost:62438/";
+
+  res.render('index', {"name": req.params.name, "pypBaseUrl": pypBaseUrl});
 });
 
 app.post('/coinform', function(req, res) {

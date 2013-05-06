@@ -1,4 +1,5 @@
 var socket = require('socket.io');
+var request = require('request');
 
 var curRoom = 0;
 
@@ -149,6 +150,19 @@ game = function(socket, io) {
       //send winner (last card incremented)
       console.log({"winner":curCard});
       io.sockets.in('horse-'+curRoom).emit('horse-winner', {"winner":curCard});
+
+      // Change each player's bet to negative if they didn't guess right and
+      // call rest service to save results on PYP Profile App
+      for (var i = 0; i < players.length; i++) {
+        var player = players[i];
+        if (choiceToInt(player.choice) != curCard) {
+          player.bet = -player.bet;
+        }
+
+        var pypBaseUrl = process.env.PYP_BASE_URL || "http://localhost:62438/";
+        request.post(pypBaseUrl + 'api/history', {form: {GameName: "Horse", UserName: player.name, Score: player.bet}});
+            
+      }
       
     }); //end 'start game'
     
@@ -165,4 +179,17 @@ exports.game = game;
 exports.joinGame = function(name, suit, bet) {
   lastPlayer = {name: name, choice: suit, bet: bet}
   players.push(lastPlayer);
+}
+
+function choiceToInt(suitChoice) {
+  switch (suitChoice) {
+    case "Spades":
+      return 0;
+    case "Hearts":
+      return 1;
+    case "Clubs":
+      return 2;
+    case "Diamonds":
+      return 3;
+  }
 }

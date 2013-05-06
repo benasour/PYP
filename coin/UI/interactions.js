@@ -220,9 +220,9 @@ function joinRoom(room)
   myRoom = room;
 }
 
-// tell the server we left, then leave the game room, and redirect to home
-function leaveGame()
+// tell the server we left, then leave the game room, and redirect to PYP Profile Games list 
+function leaveGame(returnBaseUrl)
 {
   sendLeave();
-    document.location = "..";
+  document.location = returnBaseUrl + "Game";
 }
