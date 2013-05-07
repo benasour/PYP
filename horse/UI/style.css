@@ -1,31 +1,31 @@
-/*::-webkit-scrollbar  {
-  width: 15px;
+html {
+    background-color: #e2e2e2;
+    margin: 0;
+    padding: 0;
 }
-::-webkit-scrollbar-track {
-      background-color: #343434;
-} /* the new scrollbar will have a flat appearance with the set background color */
-/*::-webkit-scrollbar-thumb {
-      background-color: #141414;
-} /* this will style the thumb, ignoring the track */
-/*::-webkit-scrollbar-button {
-      background-color: #202040;
-} /* optionally, you can style the top and the bottom buttons (left and right for horizontal bars) */
-/*::-webkit-scrollbar-corner {
-      background-color: #181820;
-} /* if both the vertical and the horizontal bars appear, then perhaps the right bottom corner also needs to be styled */
-
 body {
   position: relative;
-  background: #202020;
-  color: #C0C0C0;
+  background: #fff;
+  color: #333;
+  z-index: -2;
+}
+div{
+  display: block;
+}
+#pad {
+  padding: 10px;
 }
 #chat {
-  position:absolute;
-  left: 250px;
-  top: 10px;
+  padding: 10px;
+  position: relative;
+  left: 10px;
+  display: inline-block;
+}
+#after{
+  clear: both;
 }
 #chat table {
-  padding: 0;
+  padding: 10px;
   border-collapse: collapse;
   border-spacing: 0;
   border: 0px;
@@ -51,8 +51,10 @@ body {
 }
 #players {
   position: relative;
-  top: 1em;
-  width: 15em;
+  clear: both;
+}
+#game{
+  padding: 10px;
 }
 td:nth-child(even) .hasPlayer, .red {
   color: #FF0000;
@@ -64,12 +66,13 @@ td:nth-child(odd) .hasPlayer, .black {
   font-size: 1.75em;
 }
 #gameBoard, #sideTrack {
+  float: left;
   font-size: 1.25em;
   border-collapse: collapse; /* 'cellspacing' equivalent */
   color: green;
 }
 .back { /*for the hidden cells in sideBoard*/
-  color: #202020;
+  color: #fff;
 }
 #t1 { 
   float: left; 
@@ -88,7 +91,7 @@ table td, table th {
   text-align: right;
 }
 #namesList {
-  color:#BBBBBB;
+  color:#222;
   font-size: 1em;
   border: 1px solid black;
   border-collapse:collapse;
@@ -102,38 +105,40 @@ table td, table th {
   padding-right: 10px;
 }
 #namesList tbody  tr:nth-child(2n+1) {
-  background: #414141;
+  background: #E4E4E4;
 }
 #namesList tbody  tr:nth-child(1) {
-  background: #5A5A5A;
+  background: #BDBDBD;
   text-align: center;
-  color: #CCCCCC;
+  color: #222;
 }
-
+#results{
+  padding: 3px;
+  float: left;
+}
 select {
-  background: #414141;
-  color: #C4C4C4;
-  border: 0px;
+  background: #BDBDBD;
+  color: #222;
+  border: 1px solid black;
   margin: 2px;
 }
 textarea {
-  background: #414141;
-  color: #C4C4C4;
-  border: 0px;
+  background: #BDBDBD;
+  color: #222;
+  border: 1px solid black;
   margin: 2px;
 }
 input {
-  background: #414141;
-  color: #C4C4C4;
-  border: 0px;
+  background: #BDBDBD;
+  color: #222;
+  border: 1px solid black;
   margin: 2px;
 }
-
 .button:hover {
-  background: #108038;
+  background: #6ddd9d;
 }
 .button:active {
-  background: #087030;
+  background: #60d090;
 }
 
 .add:hover { 
@@ -143,9 +148,9 @@ input {
   background: #083070;
 }
 
-.end:hover {
-  background: #601018;
+.end:hover { 
+  background: #48a8e8;
 }
 .end:active {
-  background: #4C0810;
+  background: #3d9ddd;
 }

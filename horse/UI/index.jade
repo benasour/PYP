@@ -17,18 +17,21 @@ html(lang="en")
       input(type="button", class="end", value="Leave Game", onClick="leaveGame('#{pypBaseUrl}');")
       br
       br
-    #chat
-      table
-        tr
-          td(rowspan=2)
-            select(id="chatNames", multiple="multiple", size="12")
-          td
-            textArea(id="chatBox", rows='11', cols='40', readonly=true)
-        tr
-          td
-            input(type="text", id="chatMsg", size='52', onkeydown="if (event.keyCode==13) sendMsg();");
-    #players Players:
-      table(id="namesList")
+    #container
+      #pad
+        #chat
+          table
+            tr
+              td(rowspan=2)
+                select(id="chatNames", multiple="multiple", size="12")
+              td
+                textArea(id="chatBox", rows='11', cols='40', readonly=true)
+            tr
+              td
+                input(type="text", id="chatMsg", size='52', onkeydown="if (event.keyCode==13) sendMsg();");
+        #players Players:
+          table(id="namesList")
+        #after
     div(id="debugDiv", style="border:2px")
     input(type='hidden', id='name', value=name)
     script
