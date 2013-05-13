@@ -13,7 +13,7 @@
  }
  
  function sendChat(data){
-  socket.emit('horse-chatMsg', data);
+  socket.emit('horse-sendChatMsg', data);
  }
  
  function sendLeave(){

@@ -92,6 +92,8 @@ game = function(socket, io) {
     });
     
     socket.on('horse-startGame', function () {
+      if (started) 
+        return; //you aren't the first to click it
       started = true;
       console.log('I am the Start Game function!');
       var status = {};
@@ -165,7 +167,7 @@ game = function(socket, io) {
       
     }); //end 'start game'
     
-    socket.on('horse-chatMsg', function (data) {
+    socket.on('horse-sendChatMsg', function (data) {
       var msg = data["msg"];
       var room = data["room"];
       io.sockets.in(room).emit('horse-chatMsg', {"msg":msg});
