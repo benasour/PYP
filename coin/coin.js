@@ -12,7 +12,6 @@ var gameLength = 1;
 var idsToNames = {};
 
 game = function(socket, io) {
-    console.log('A new connection has been created');
     idsToNames[socket.id] = lastPlayer.name;
     var toSend = {};
     if (started && clients > 0) // if a game is in progress, tell this person!
@@ -30,10 +29,10 @@ game = function(socket, io) {
     clients++;
     toSend = {};
     toSend["players"] = players;
-    console.log("room coin-" + curRoom + ": " + toSend);
+    console.log("room coin-" + curRoom + ": " + JSON.stringify(toSend));
     io.sockets.in('coin-'+curRoom).emit('coin-playerListUpdate', toSend);
     
-    socket.on('coin-disconnect', function(data) {
+    socket.on('disconnect', function(data) {
       clients--;
       console.log("disconnect, clients: " + clients);
       if (clients == 0)

@@ -12,7 +12,6 @@ var trackLength = 8;
 var idsToNames = {};
 
 game = function(socket, io) {
-    console.log('A new connection has been created'); 
     idsToNames[socket.id] = lastPlayer.name;
     var toSend = {};
     if (started && clients > 0) // if a game is in progress, tell this person!
@@ -30,10 +29,10 @@ game = function(socket, io) {
     clients++;
     toSend = {};
     toSend["players"] = players;
-    console.log("room horse-" + curRoom + ": " + toSend);
+    console.log("room horse-" + curRoom + ": " + JSON.stringify(toSend));
     io.sockets.in('horse-'+curRoom).emit('horse-playerListUpdate', toSend);
     
-    socket.on('horse-disconnect', function(data) {
+    socket.on('disconnect', function(data) { console.log("horse-disconnect event handler");
       clients--;
       console.log("disconnect, clients: " + clients);
       if (clients == 0)

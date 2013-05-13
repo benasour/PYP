@@ -121,8 +121,16 @@ app.get('/interactions.js', function(req, res) {
 //connect to game
 //THIS SWITCH SHOULD ONLY BE HERE IF WE'RE NOT PREPENDING GAME NAME IN ALL SOCKET SIGNALS
 io.sockets.on('connection', function (socket) {
-  horse.game(socket, io);
-  coin.game(socket, io);
+  console.log('A new connection has been created - ' + socket.id);
+  console.log("game choice for clien " + socket.id + " is " + gameChoice);
+  switch (gameChoice) {
+    case "/horse/":
+      horse.game(socket, io);
+      break;
+    case "/coin/":
+      coin.game(socket, io);
+      break;
+  }
 });
 
 
